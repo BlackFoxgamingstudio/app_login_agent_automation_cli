@@ -1,0 +1,348 @@
+# 4Culture Grant Application Configuration
+
+# Grant Information
+grant:
+  name: "Moving Stories: Short-Form Graphic Novels for King County Metro Transit RapidRide"
+  identifier: "moving-stories-rapidride"
+  deadline: "January 13, 2026 at 4pm"
+  status: "Open"
+
+# Document Mapping
+documents:
+  # Primary document for Key Tech Labs / Green STEM Expo
+  primary: "02-green-stem-expo-technical.md"
+  # Additional relevant documents
+  additional:
+    - "01-master-grants-guide.md"
+    - "03-community-solar-garden-technical.md"
+    - "04-urban-farm-collective-technical.md"
+    - "05-circular-economy-hub-technical.md"
+    - "06-sustainable-business-accelerator-technical.md"
+
+# Organization Information
+organization:
+  name: "Key Tech Labs"
+  operating_name: "Green STEM Expo"
+  tax_status: "501(c)(3)"
+  primary_contact: "Keyisaccess"
+
+# Field Mappings
+# Maps standardized data fields to 4Culture form fields
+field_mappings:
+  organization_name:
+    field_type: text
+    field_name: organization_name
+    required: true
+    max_length: 255
+  
+  organization_mission:
+    field_type: textarea
+    field_name: mission_statement
+    required: true
+    max_length: 2000
+  
+  organization_tax_status:
+    field_type: select
+    field_name: tax_status
+    required: true
+    options:
+      - "501(c)(3)"
+      - "501(c)(4)"
+      - "Other"
+  
+  organization_structure:
+    field_type: textarea
+    field_name: organizational_structure
+    required: false
+    max_length: 1000
+  
+  project_title:
+    field_type: text
+    field_name: project_title
+    required: true
+    max_length: 255
+  
+  project_description:
+    field_type: textarea
+    field_name: project_description
+    required: true
+    max_length: 5000
+  
+  project_goals:
+    field_type: textarea
+    field_name: project_goals
+    required: false
+    max_length: 2000
+  
+  project_impact:
+    field_type: textarea
+    field_name: project_impact
+    required: false
+    max_length: 2000
+  
+  project_target_audience:
+    field_type: textarea
+    field_name: target_audience
+    required: false
+    max_length: 1000
+  
+  project_activities:
+    field_type: textarea
+    field_name: project_activities
+    required: false
+    max_length: 2000
+  
+  project_outcomes:
+    field_type: textarea
+    field_name: expected_outcomes
+    required: false
+    max_length: 2000
+  
+  budget_total:
+    field_type: number
+    field_name: total_budget_request
+    required: true
+    min_value: 0
+    max_value: 1000000
+  
+  budget_line_items:
+    field_type: textarea
+    field_name: budget_breakdown
+    required: false
+    max_length: 3000
+  
+  contact_name:
+    field_type: text
+    field_name: primary_contact_name
+    required: true
+    max_length: 255
+  
+  contact_email:
+    field_type: email
+    field_name: primary_contact_email
+    required: true
+    max_length: 255
+  
+  contact_phone:
+    field_type: tel
+    field_name: primary_contact_phone
+    required: false
+    max_length: 20
+  
+  contact_address:
+    field_type: textarea
+    field_name: organization_address
+    required: false
+    max_length: 500
+  
+  contact_website:
+    field_type: url
+    field_name: organization_website
+    required: false
+    max_length: 255
+  
+  timeline_start_date:
+    field_type: date
+    field_name: project_start_date
+    required: false
+  
+  timeline_end_date:
+    field_type: date
+    field_name: project_end_date
+    required: false
+  
+  timeline_duration:
+    field_type: text
+    field_name: project_duration
+    required: false
+    max_length: 100
+  
+  technical_specifications:
+    field_type: textarea
+    field_name: technical_requirements
+    required: false
+    max_length: 3000
+  
+  technical_equipment:
+    field_type: textarea
+    field_name: equipment_needed
+    required: false
+    max_length: 2000
+
+# Required Fields (must be filled)
+required_fields:
+  - organization_name
+  - organization_mission
+  - organization_tax_status
+  - project_title
+  - project_description
+  - budget_total
+  - contact_name
+  - contact_email
+
+# Optional Fields (recommended but not required)
+optional_fields:
+  - organization_structure
+  - project_goals
+  - project_impact
+  - project_target_audience
+  - project_activities
+  - project_outcomes
+  - budget_line_items
+  - contact_phone
+  - contact_address
+  - contact_website
+  - timeline_start_date
+  - timeline_end_date
+  - technical_specifications
+  - technical_equipment
+
+# File Upload Requirements
+file_uploads:
+  required:
+    - name: "Organizational Documents"
+      description: "501(c)(3) determination letter, financial statements"
+      file_types: ["pdf", "doc", "docx"]
+      max_size_mb: 10
+  
+  optional:
+    - name: "Project Budget"
+      description: "Detailed budget spreadsheet"
+      file_types: ["xls", "xlsx", "pdf"]
+      max_size_mb: 5
+    
+    - name: "Supporting Materials"
+      description: "Photos, videos, or other supporting documents"
+      file_types: ["pdf", "jpg", "png", "mp4"]
+      max_size_mb: 25
+
+# Form Navigation
+form_navigation:
+  # Expected number of pages in the form
+  total_pages: 5
+  
+  # Page order and expected fields per page
+  pages:
+    - page: 1
+      name: "Organization Information"
+      fields:
+        - organization_name
+        - organization_mission
+        - organization_tax_status
+        - organization_structure
+        - contact_name
+        - contact_email
+        - contact_phone
+        - contact_address
+    
+    - page: 2
+      name: "Project Information"
+      fields:
+        - project_title
+        - project_description
+        - project_goals
+        - project_impact
+        - project_target_audience
+    
+    - page: 3
+      name: "Project Details"
+      fields:
+        - project_activities
+        - project_outcomes
+        - timeline_start_date
+        - timeline_end_date
+        - timeline_duration
+    
+    - page: 4
+      name: "Budget Information"
+      fields:
+        - budget_total
+        - budget_line_items
+        - budget_matching_funds
+    
+    - page: 5
+      name: "Technical Requirements"
+      fields:
+        - technical_specifications
+        - technical_equipment
+        - technical_infrastructure
+
+# Browser Automation Settings
+browser:
+  wait_timeout: 10  # seconds
+  field_fill_delay: 0.5  # seconds between fields
+  page_load_delay: 2  # seconds after page navigation
+  screenshot_on_error: true
+  screenshot_on_step: true
+
+# Narrative Generation Settings
+narrative_generation:
+  enabled: false  # Set to true to enable narrative generation
+  # OpenAI API key must be provided via:
+  #   1. Environment variable: OPENAI_API_KEY
+  #   2. CLI argument: --openai-api-key
+  #   3. Not stored in this file for security
+  openai_api_key: null  # Use environment variable or CLI argument
+  model: "gpt-4"
+  temperature: 0.7
+  max_tokens: 2000
+  
+  # Field-specific narrative settings
+  fields_to_narrate:
+    project_description:
+      enabled: true
+      template: "project_description"
+      min_words: 500
+      max_words: 1000
+    mission_statement:
+      enabled: true
+      template: "project_description"
+      min_words: 300
+      max_words: 600
+    project_goals:
+      enabled: true
+      template: "goals"
+      min_words: 300
+      max_words: 600
+    project_impact:
+      enabled: true
+      template: "impact"
+      min_words: 400
+      max_words: 700
+    expected_outcomes:
+      enabled: true
+      template: "impact"
+      min_words: 400
+      max_words: 700
+    project_activities:
+      enabled: true
+      template: "activities"
+      min_words: 500
+      max_words: 800
+    target_audience:
+      enabled: true
+      template: "project_description"
+      min_words: 200
+      max_words: 400
+    budget_breakdown:
+      enabled: true
+      template: "budget"
+      min_words: 400
+      max_words: 600
+    technical_requirements:
+      enabled: true
+      template: "technical_specifications"
+      min_words: 500
+      max_words: 700
+    equipment_needed:
+      enabled: true
+      template: "technical_specifications"
+      min_words: 400
+      max_words: 600
+  
+  # Template customization
+  include_organization_context: true
+  include_grant_context: true
+  emphasize_uniqueness: true
+  require_metrics: true
+
