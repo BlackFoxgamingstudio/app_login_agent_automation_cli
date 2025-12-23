@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4Culture Grant Application SDK - Complete Automation Solution</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>4Culture Grant SDK</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#download">Download</a></li>
+                <li><a href="#getting-started">Getting Started</a></li>
+                <li><a href="#documentation">Documentation</a></li>
+                <li><a href="#examples">Examples</a></li>
+                <li><a href="#api">API Reference</a></li>
+                <li><a href="#support">Support</a></li>
+            </ul>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">4Culture Grant Application SDK</h1>
+            <p class="hero-subtitle">Complete automation solution for grant application workflows</p>
+            <p class="hero-description">
+                Streamline your grant application process with our comprehensive SDK. 
+                Extract data, generate narratives, automate form filling, and manage 
+                your grant applications with a powerful command-line interface.
+            </p>
+            <div class="hero-buttons">
+                <a href="#download" class="btn btn-primary">Download SDK</a>
+                <a href="#getting-started" class="btn btn-secondary">Get Started</a>
+            </div>
+            <div class="hero-features">
+                <div class="feature-badge">✅ 34 CLI Commands</div>
+                <div class="feature-badge">✅ Browser Automation</div>
+                <div class="feature-badge">✅ AI-Powered Narratives</div>
+                <div class="feature-badge">✅ Database Management</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download" class="section">
+        <div class="container">
+            <h2>Download SDK</h2>
+            <div class="download-options">
+                <div class="download-card">
+                    <h3>📦 Install via Git</h3>
+                    <pre><code class="language-bash">git clone https://github.com/your-org/grants-sdk.git
+cd grants-sdk
+pip install -r requirements.txt</code></pre>
+                </div>
+                <div class="download-card">
+                    <h3>📥 Direct Download</h3>
+                    <p>Download the complete SDK package:</p>
+                    <a href="sdk-download.tar.gz" class="btn btn-primary" download>Download SDK (tar.gz)</a>
+                    <p class="download-info">Version 1.0.0 | Last updated: December 2025 | 363 KB</p>
+                    <p class="download-info" style="font-size: 0.85rem; margin-top: 0.5rem;">
+                        Extract with: <code>tar -xzf sdk-download.tar.gz</code>
+                    </p>
+                </div>
+                <div class="download-card">
+                    <h3>🐍 Python Package</h3>
+                    <pre><code class="language-bash">pip install grants-sdk</code></pre>
+                    <p class="download-info">Available on PyPI (coming soon)</p>
+                </div>
+            </div>
+            
+            <div class="requirements">
+                <h3>Requirements</h3>
+                <ul>
+                    <li>Python 3.9 or higher</li>
+                    <li>pip package manager</li>
+                    <li>4Culture account credentials</li>
+                    <li>OpenAI API key (optional, for narrative generation)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Getting Started Section -->
+    <section id="getting-started" class="section section-alt">
+        <div class="container">
+            <h2>Getting Started</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Install the SDK</h3>
+                        <pre><code class="language-bash"># Clone the repository
+git clone https://github.com/your-org/grants-sdk.git
+cd grants-sdk
+
+# Install dependencies
+pip install -r requirements.txt</code></pre>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Set Up Credentials</h3>
+                        <pre><code class="language-bash"># Set environment variables
+export 4CULTURE_USERNAME="your_username"
+export 4CULTURE_PASSWORD="your_password"
+export OPENAI_API_KEY="your_api_key"  # Optional</code></pre>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Run Your First Command</h3>
+                        <pre><code class="language-bash"># Extract data from documents
+python3 -m agents.grant_scraper.sdk_cli data extract \
+  --grant-name "Your Grant Name" \
+  --docs-folder docs \
+  --output extracted_data.json</code></pre>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Explore the CLI</h3>
+                        <pre><code class="language-bash"># View all available commands
+python3 -m agents.grant_scraper.sdk_cli --help
+
+# View command groups
+python3 -m agents.grant_scraper.sdk_cli auth --help
+python3 -m agents.grant_scraper.sdk_cli data --help
+python3 -m agents.grant_scraper.sdk_cli workflow --help</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documentation Section -->
+    <section id="documentation" class="section">
+        <div class="container">
+            <h2>Documentation</h2>
+            <div class="docs-grid">
+                <div class="doc-card">
+                    <h3>📚 Quick Start Guide</h3>
+                    <p>Get up and running in minutes with our quick start guide.</p>
+                    <a href="quick-start.html" class="doc-link">Read Guide →</a>
+                </div>
+                <div class="doc-card">
+                    <h3>🔧 CLI Reference</h3>
+                    <p>Complete reference for all 34 CLI commands across 9 command groups.</p>
+                    <a href="cli-reference.html" class="doc-link">View Reference →</a>
+                </div>
+                <div class="doc-card">
+                    <h3>🌐 MCP Integration</h3>
+                    <p>Learn how to set up and use MCP browser tools for automation.</p>
+                    <a href="mcp-integration.html" class="doc-link">Learn More →</a>
+                </div>
+                <div class="doc-card">
+                    <h3>🤖 Workflow Automation</h3>
+                    <p>Automate complete grant application workflows from start to finish.</p>
+                    <a href="workflows.html" class="doc-link">Explore →</a>
+                </div>
+                <div class="doc-card">
+                    <h3>💾 Database Management</h3>
+                    <p>Manage grant applications, track status, and generate reports.</p>
+                    <a href="database.html" class="doc-link">View Docs →</a>
+                </div>
+                <div class="doc-card">
+                    <h3>📊 Dashboard & Reports</h3>
+                    <p>Generate HTML dashboards and detailed application reports.</p>
+                    <a href="reports.html" class="doc-link">Learn More →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Examples Section -->
+    <section id="examples" class="section section-alt">
+        <div class="container">
+            <h2>Examples</h2>
+            <div class="examples">
+                <div class="example-card">
+                    <h3>Example 1: Extract Data from Documents</h3>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli data extract \
+  --grant-name "Moving Stories: Short-Form Graphic Novels" \
+  --docs-folder docs \
+  --output extracted_data.json</code></pre>
+                </div>
+                <div class="example-card">
+                    <h3>Example 2: Generate Project Narrative</h3>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli narrative generate \
+  --grant-name "Your Grant Name" \
+  --narrative-type project_description \
+  --openai-api-key $OPENAI_API_KEY \
+  --output narrative.txt</code></pre>
+                </div>
+                <div class="example-card">
+                    <h3>Example 3: Run Complete Workflow</h3>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli workflow full \
+  --grant-name "Your Grant Name" \
+  --docs-folder docs \
+  --use-narratives \
+  --openai-api-key $OPENAI_API_KEY</code></pre>
+                </div>
+                <div class="example-card">
+                    <h3>Example 4: Manage Grant Database</h3>
+                    <pre><code class="language-bash"># Add grant to database
+python3 -m agents.grant_scraper.sdk_cli database add \
+  --name "Grant Name" \
+  --deadline "2026-01-13" \
+  --status planned \
+  --priority 5
+
+# List all grants
+python3 -m agents.grant_scraper.sdk_cli database list
+
+# Generate dashboard
+python3 -m agents.grant_scraper.sdk_cli report dashboard</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Reference Section -->
+    <section id="api" class="section">
+        <div class="container">
+            <h2>API Reference</h2>
+            <div class="api-reference">
+                <div class="api-group">
+                    <h3>Command Groups</h3>
+                    <div class="command-list">
+                        <div class="command-item">
+                            <code>auth</code>
+                            <span>Authentication commands (login, logout)</span>
+                        </div>
+                        <div class="command-item">
+                            <code>data</code>
+                            <span>Data extraction and validation (extract, validate, standardize, identify-docs)</span>
+                        </div>
+                        <div class="command-item">
+                            <code>mapping</code>
+                            <span>Field mapping (map, validate-map, create-instructions)</span>
+                        </div>
+                        <div class="command-item">
+                            <code>narrative</code>
+                            <span>Narrative generation (generate, generate-all)</span>
+                        </div>
+                        <div class="command-item">
+                            <code>browser</code>
+                            <span>Browser automation (navigate, snapshot, find, click, type, select, screenshot, wait)</span>
+                        </div>
+                        <div class="command-item">
+                            <code>form</code>
+                            <span>Form automation (start, extract-structure, fill, fill-all, validate, save)</span>
+                        </div>
+                        <div class="command-item">
+                            <code>workflow</code>
+                            <span>Workflow orchestration (full, custom)</span>
+                        </div>
+                        <div class="command-item">
+                            <code>database</code>
+                            <span>Database management (add, update, get, list, timeline)</span>
+                        </div>
+                        <div class="command-item">
+                            <code>report</code>
+                            <span>Reporting (generate, dashboard)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="api-details">
+                <p>For complete API documentation, see the <a href="cli-reference.html">CLI Reference</a> page.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Support Section -->
+    <section id="support" class="section section-alt">
+        <div class="container">
+            <h2>Support & Resources</h2>
+            <div class="support-grid">
+                <div class="support-card">
+                    <h3>📖 Documentation</h3>
+                    <p>Comprehensive guides and references</p>
+                    <ul>
+                        <li><a href="quick-start.html">Quick Start Guide</a></li>
+                        <li><a href="cli-reference.html">CLI Reference</a></li>
+                        <li><a href="mcp-integration.html">MCP Integration</a></li>
+                    </ul>
+                </div>
+                <div class="support-card">
+                    <h3>💬 Community</h3>
+                    <p>Get help from the community</p>
+                    <ul>
+                        <li><a href="https://github.com/your-org/grants-sdk/issues">GitHub Issues</a></li>
+                        <li><a href="https://github.com/your-org/grants-sdk/discussions">Discussions</a></li>
+                        <li><a href="mailto:support@example.com">Email Support</a></li>
+                    </ul>
+                </div>
+                <div class="support-card">
+                    <h3>🔧 Tools & Resources</h3>
+                    <p>Additional resources and tools</p>
+                    <ul>
+                        <li><a href="test-results.html">Test Results</a></li>
+                        <li><a href="examples.html">More Examples</a></li>
+                        <li><a href="best-practices.html">Best Practices</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>4Culture Grant SDK</h4>
+                    <p>Complete automation solution for grant applications</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#download">Download</a></li>
+                        <li><a href="#getting-started">Getting Started</a></li>
+                        <li><a href="#documentation">Documentation</a></li>
+                        <li><a href="#examples">Examples</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="cli-reference.html">CLI Reference</a></li>
+                        <li><a href="mcp-integration.html">MCP Integration</a></li>
+                        <li><a href="workflows.html">Workflows</a></li>
+                        <li><a href="database.html">Database</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Version</h4>
+                    <p>v1.0.0</p>
+                    <p>Last updated: December 2025</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 4Culture Grant SDK. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
