@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLI Reference - 4Culture Grant SDK</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1><a href="index.html" style="text-decoration: none; color: inherit;">4Culture Grant SDK</a></h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html#home">Home</a></li>
+                <li><a href="index.html#download">Download</a></li>
+                <li><a href="index.html#getting-started">Getting Started</a></li>
+                <li><a href="cli-reference.html" class="active">CLI Reference</a></li>
+                <li><a href="index.html#examples">Examples</a></li>
+                <li><a href="index.html#support">Support</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="section">
+        <div class="container">
+            <h1>CLI Reference</h1>
+            <p class="intro-text">Complete reference for all 34 CLI commands across 9 command groups.</p>
+
+            <!-- Auth Commands -->
+            <div class="command-group">
+                <h2>Authentication Commands</h2>
+                <div class="command-detail">
+                    <h3><code>auth login</code></h3>
+                    <p>Interactive login to 4Culture portal with browser automation.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli auth login \
+  --username "your_username" \
+  --password "your_password" \
+  --non-interactive \
+  --skip-mcp-setup</code></pre>
+                    <p><strong>Options:</strong></p>
+                    <ul>
+                        <li><code>--username</code>: 4Culture username</li>
+                        <li><code>--password</code>: 4Culture password</li>
+                        <li><code>--non-interactive</code>: Skip all prompts</li>
+                        <li><code>--skip-mcp-setup</code>: Skip MCP setup</li>
+                    </ul>
+                </div>
+                <div class="command-detail">
+                    <h3><code>auth logout</code></h3>
+                    <p>Logout and close browser session.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli auth logout</code></pre>
+                </div>
+            </div>
+
+            <!-- Data Commands -->
+            <div class="command-group">
+                <h2>Data Commands</h2>
+                <div class="command-detail">
+                    <h3><code>data extract</code></h3>
+                    <p>Extract data from grant documents.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli data extract \
+  --grant-name "Grant Name" \
+  --docs-folder docs \
+  --output extracted_data.json</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>data validate</code></h3>
+                    <p>Validate extracted data for completeness.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli data validate \
+  --grant-name "Grant Name" \
+  --docs-folder docs</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>data standardize</code></h3>
+                    <p>Standardize data format.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli data standardize \
+  --grant-name "Grant Name" \
+  --docs-folder docs \
+  --output standardized_data.json</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>data identify-docs</code></h3>
+                    <p>Identify relevant documents for a grant.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli data identify-docs \
+  --grant-name "Grant Name" \
+  --docs-folder docs</code></pre>
+                </div>
+            </div>
+
+            <!-- Mapping Commands -->
+            <div class="command-group">
+                <h2>Mapping Commands</h2>
+                <div class="command-detail">
+                    <h3><code>mapping map</code></h3>
+                    <p>Map extracted data to form fields.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli mapping map \
+  --grant-name "Grant Name" \
+  --data-file extracted_data.json \
+  --output mapped_fields.json</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>mapping validate-map</code></h3>
+                    <p>Validate field mappings.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli mapping validate-map \
+  --mapped-file mapped_fields.json</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>mapping create-instructions</code></h3>
+                    <p>Create form filling instructions from mappings.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli mapping create-instructions \
+  --mapped-file mapped_fields.json \
+  --output instructions.json</code></pre>
+                </div>
+            </div>
+
+            <!-- Narrative Commands -->
+            <div class="command-group">
+                <h2>Narrative Commands</h2>
+                <div class="command-detail">
+                    <h3><code>narrative generate</code></h3>
+                    <p>Generate a single narrative using OpenAI.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli narrative generate \
+  --grant-name "Grant Name" \
+  --narrative-type project_description \
+  --openai-api-key $OPENAI_API_KEY \
+  --output narrative.txt</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>narrative generate-all</code></h3>
+                    <p>Generate all narratives for a grant application.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli narrative generate-all \
+  --grant-name "Grant Name" \
+  --openai-api-key $OPENAI_API_KEY</code></pre>
+                </div>
+            </div>
+
+            <!-- Browser Commands -->
+            <div class="command-group">
+                <h2>Browser Commands</h2>
+                <div class="command-detail">
+                    <h3><code>browser navigate</code></h3>
+                    <p>Navigate to a URL.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli browser navigate \
+  --url "https://apply.4culture.org/login"</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>browser snapshot</code></h3>
+                    <p>Take a page snapshot.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli browser snapshot \
+  --output snapshot.json</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>browser find</code></h3>
+                    <p>Find an element on the page.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli browser find \
+  --description "username input field"</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>browser click</code></h3>
+                    <p>Click an element.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli browser click \
+  --description "login button"</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>browser type</code></h3>
+                    <p>Type text into an input field.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli browser type \
+  --description "username field" \
+  --text "your_username"</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>browser select</code></h3>
+                    <p>Select an option in a dropdown.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli browser select \
+  --description "state dropdown" \
+  --values "Washington"</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>browser screenshot</code></h3>
+                    <p>Take a screenshot.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli browser screenshot \
+  --name "login_page"</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>browser wait</code></h3>
+                    <p>Wait for a condition or time period.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli browser wait \
+  --time 5</code></pre>
+                </div>
+            </div>
+
+            <!-- Form Commands -->
+            <div class="command-group">
+                <h2>Form Commands</h2>
+                <div class="command-detail">
+                    <h3><code>form start</code></h3>
+                    <p>Start a new grant application.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli form start \
+  --grant-name "Grant Name"</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>form extract-structure</code></h3>
+                    <p>Extract form structure and fields.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli form extract-structure \
+  --output form_structure.json</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>form fill</code></h3>
+                    <p>Fill a single form field.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli form fill \
+  --field "project_title" \
+  --value "My Project"</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>form fill-all</code></h3>
+                    <p>Fill all form fields using instructions.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli form fill-all \
+  --instructions-file instructions.json</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>form validate</code></h3>
+                    <p>Validate form for errors.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli form validate</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>form save</code></h3>
+                    <p>Save draft application.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli form save</code></pre>
+                </div>
+            </div>
+
+            <!-- Workflow Commands -->
+            <div class="command-group">
+                <h2>Workflow Commands</h2>
+                <div class="command-detail">
+                    <h3><code>workflow full</code></h3>
+                    <p>Run complete automation workflow.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli workflow full \
+  --grant-name "Grant Name" \
+  --docs-folder docs \
+  --use-narratives \
+  --openai-api-key $OPENAI_API_KEY \
+  --dry-run</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>workflow custom</code></h3>
+                    <p>Run custom workflow with specific steps.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli workflow custom \
+  --grant-name "Grant Name" \
+  --steps "extract,standardize,map"</code></pre>
+                </div>
+            </div>
+
+            <!-- Database Commands -->
+            <div class="command-group">
+                <h2>Database Commands</h2>
+                <div class="command-detail">
+                    <h3><code>database add</code></h3>
+                    <p>Add a grant to the database.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli database add \
+  --name "Grant Name" \
+  --deadline "2026-01-13" \
+  --status planned \
+  --priority 5</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>database update</code></h3>
+                    <p>Update grant status.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli database update \
+  --grant-id 1 \
+  --status in_progress \
+  --progress 50</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>database get</code></h3>
+                    <p>Get grant details.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli database get \
+  --grant-id 1</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>database list</code></h3>
+                    <p>List all grants.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli database list</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>database timeline</code></h3>
+                    <p>View grant timeline by deadline.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli database timeline</code></pre>
+                </div>
+            </div>
+
+            <!-- Report Commands -->
+            <div class="command-group">
+                <h2>Report Commands</h2>
+                <div class="command-detail">
+                    <h3><code>report generate</code></h3>
+                    <p>Generate application report.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli report generate \
+  --result-file workflow_result.json \
+  --output report.md</code></pre>
+                </div>
+                <div class="command-detail">
+                    <h3><code>report dashboard</code></h3>
+                    <p>Generate HTML dashboard.</p>
+                    <pre><code class="language-bash">python3 -m agents.grant_scraper.sdk_cli report dashboard</code></pre>
+                </div>
+            </div>
+
+            <div class="back-link">
+                <a href="index.html" class="btn btn-primary">← Back to Home</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 4Culture Grant SDK. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

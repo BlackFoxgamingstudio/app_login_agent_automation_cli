@@ -1,0 +1,1076 @@
+Metadata-Version: 2.4
+Name: grant-automation-cli
+Version: 1.0.0
+Summary: CLI and SDK for 4Culture grant application automation with browser automation and MCP
+Author: the project authors
+License: MIT
+Project-URL: Repository, https://github.com/OWNER/REPO
+Project-URL: Documentation, https://github.com/OWNER/REPO#readme
+Keywords: cli,automation,grants,playwright,mcp,4culture
+Classifier: Development Status :: 4 - Beta
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Office/Business
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: playwright>=1.40.0
+Requires-Dist: openai>=1.0.0
+Requires-Dist: pyyaml>=6.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.0.0; extra == "dev"
+Requires-Dist: ruff>=0.1.0; extra == "dev"
+Requires-Dist: pre-commit>=3.0.0; extra == "dev"
+Dynamic: license-file
+
+# 4Culture Grant Application Automation - CLI SDK Documentation
+
+**Version:** 1.0.0  
+**Last Updated:** December 23, 2025
+
+## Overview
+
+The 4Culture Grant Application Automation CLI SDK is a comprehensive command-line tool that provides fine-grained control over the entire grant application process. It enables developers to automate grant application workflows, extract data from documents, generate narratives, manage grant databases, and interact with the 4Culture portal through browser automation.
+
+### Key Features
+
+- **Complete Workflow Automation**: End-to-end automation from document extraction to form submission
+- **Fine-Grained Control**: Execute individual steps independently or combine them into custom workflows
+- **Browser Automation**: Full browser control using Playwright with MCP integration
+- **Data Extraction**: Intelligent extraction from markdown documents
+- **Narrative Generation**: AI-powered narrative generation using OpenAI
+- **Database Management**: Track and manage grants with SQLite database
+- **Multiple Output Formats**: Human-readable, JSON, and YAML output formats
+- **Interactive Mode**: Step-by-step guided workflows with user confirmation
+
+## Table of Contents
+
+1. [Installation](#installation)
+2. [Quick Start](#quick-start)
+3. [Command Reference](#command-reference)
+4. [Workflows](#workflows)
+5. [Output Formats](#output-formats)
+6. [Configuration](#configuration)
+7. [Examples](#examples)
+8. [Troubleshooting](#troubleshooting)
+
+## Installation
+
+### Prerequisites
+
+- Python 3.9 or higher
+- pip package manager
+- Playwright (for browser automation)
+- OpenAI API key (optional, for narrative generation)
+
+### Setup
+
+```bash
+# Install dependencies
+pip install playwright openai pyyaml
+
+# Install Playwright browsers
+playwright install chromium
+
+# Verify installation
+python3 -m agents.grant_scraper.sdk_cli --help
+```
+
+### MCP Server Setup
+
+The CLI uses MCP (Model Context Protocol) servers for browser automation. Set up your preferred browser automation method:
+
+```bash
+# Configure MCP server interactively
+python3 -m agents.grant_scraper.mcp_setup_cli configure
+
+# Or use Playwright directly (recommended)
+# Playwright is automatically detected and used
+```
+
+## Quick Start
+
+### Basic Login
+
+```bash
+# Interactive login
+python3 -m agents.grant_scraper.sdk_cli auth login
+
+# Non-interactive login with credentials
+python3 -m agents.grant_scraper.sdk_cli auth login \
+  --username "Keyisaccess" \
+  --password "Outlaw22!!" \
+  --non-interactive
+```
+
+### Extract Data from Documents
+
+```bash
+# Extract grant data from documents
+python3 -m agents.grant_scraper.sdk_cli data extract \
+  --grant-name "Moving Stories: Short-Form Graphic Novels" \
+  --docs-folder "docs" \
+  --output "grant_data.json"
+```
+
+### Run Complete Workflow
+
+```bash
+# Full automation workflow
+python3 -m agents.grant_scraper.sdk_cli workflow full \
+  --grant-name "Moving Stories: Short-Form Graphic Novels" \
+  --username "Keyisaccess" \
+  --password "Outlaw22!!" \
+  --use-narratives \
+  --openai-api-key "sk-..."
+```
+
+## Command Reference
+
+### Authentication Commands (`auth`)
+
+#### `auth login`
+
+Login to the 4Culture portal with interactive browser automation.
+
+**Options:**
+- `--username TEXT`: 4Culture username
+- `--password TEXT`: 4Culture password
+- `--non-interactive`: Skip all prompts (use defaults)
+- `--skip-mcp-setup`: Skip MCP setup (fail if tools not available)
+- `--skip-verification`: Skip verification steps
+
+**Examples:**
+```bash
+# Interactive login
+python3 -m agents.grant_scraper.sdk_cli auth login
+
+# Non-interactive with credentials
+python3 -m agents.grant_scraper.sdk_cli auth login \
+  --username "Keyisaccess" \
+  --password "Outlaw22!!" \
+  --non-interactive
+```
+
+#### `auth logout`
+
+Logout and close browser session.
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli auth logout
+```
+
+---
+
+### Data Commands (`data`)
+
+#### `data extract`
+
+Extract grant-related data from markdown documents.
+
+**Options:**
+- `--grant-name TEXT` (required): Name of the grant
+- `--doc PATH`: Specific document path to use
+- `--docs-folder PATH`: Path to docs folder (default: `docs`)
+- `--output PATH`: Output file for extracted data (JSON)
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli data extract \
+  --grant-name "Moving Stories" \
+  --doc "docs/02-green-stem-expo-technical.md" \
+  --output "extracted_data.json"
+```
+
+#### `data validate`
+
+Validate extracted data for completeness and correctness.
+
+**Options:**
+- `--grant-name TEXT` (required): Name of the grant
+- `--doc PATH`: Specific document path
+- `--docs-folder PATH`: Path to docs folder (default: `docs`)
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli data validate \
+  --grant-name "Moving Stories"
+```
+
+#### `data standardize`
+
+Convert extracted data to standardized format.
+
+**Options:**
+- `--grant-name TEXT` (required): Name of the grant
+- `--doc PATH`: Specific document path
+- `--docs-folder PATH`: Path to docs folder (default: `docs`)
+- `--output PATH`: Output file for standardized data
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli data standardize \
+  --grant-name "Moving Stories" \
+  --output "standardized_data.json"
+```
+
+#### `data identify-docs`
+
+Identify relevant documents for a grant.
+
+**Options:**
+- `--grant-name TEXT` (required): Name of the grant
+- `--organization-name TEXT`: Organization name
+- `--docs-folder PATH`: Path to docs folder (default: `docs`)
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli data identify-docs \
+  --grant-name "Moving Stories" \
+  --organization-name "Key Tech Labs"
+```
+
+---
+
+### Mapping Commands (`mapping`)
+
+#### `mapping map`
+
+Map extracted data to form fields.
+
+**Options:**
+- `--grant-name TEXT` (required): Name of the grant
+- `--data-file PATH`: Standardized data file (if not provided, extracts fresh)
+- `--doc PATH`: Document path
+- `--docs-folder PATH`: Path to docs folder (default: `docs`)
+- `--config PATH`: Configuration file path
+- `--use-narratives`: Use OpenAI to generate complete narratives
+- `--openai-api-key TEXT`: OpenAI API key
+- `--narrative-model TEXT`: OpenAI model (default: `gpt-4`)
+- `--output PATH`: Output file for mapped fields
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli mapping map \
+  --grant-name "Moving Stories" \
+  --use-narratives \
+  --openai-api-key "sk-..." \
+  --output "mapped_fields.json"
+```
+
+#### `mapping validate-map`
+
+Validate field mappings.
+
+**Options:**
+- `--mapped-file PATH` (required): Path to mapped fields file
+- `--config PATH`: Configuration file path
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli mapping validate-map \
+  --mapped-file "mapped_fields.json"
+```
+
+#### `mapping create-instructions`
+
+Create field filling instructions from mapped fields.
+
+**Options:**
+- `--mapped-file PATH` (required): Path to mapped fields file
+- `--config PATH`: Configuration file path
+- `--output PATH`: Output file for instructions
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli mapping create-instructions \
+  --mapped-file "mapped_fields.json" \
+  --output "filling_instructions.json"
+```
+
+---
+
+### Narrative Commands (`narrative`)
+
+#### `narrative generate`
+
+Generate narrative for a specific field type.
+
+**Options:**
+- `--grant-name TEXT` (required): Name of the grant
+- `--narrative-type TEXT` (required): Type of narrative (e.g., `project_description`, `goals`, `impact`)
+- `--data-file PATH`: Grant data file
+- `--doc PATH`: Document path
+- `--docs-folder PATH`: Path to docs folder (default: `docs`)
+- `--openai-api-key TEXT`: OpenAI API key
+- `--model TEXT`: OpenAI model (default: `gpt-4`)
+- `--output PATH`: Output file for narrative
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli narrative generate \
+  --grant-name "Moving Stories" \
+  --narrative-type "project_description" \
+  --openai-api-key "sk-..." \
+  --output "project_description.txt"
+```
+
+#### `narrative generate-all`
+
+Generate all narratives for a grant.
+
+**Options:**
+- `--grant-name TEXT` (required): Name of the grant
+- `--data-file PATH`: Grant data file
+- `--doc PATH`: Document path
+- `--docs-folder PATH`: Path to docs folder (default: `docs`)
+- `--openai-api-key TEXT`: OpenAI API key
+- `--model TEXT`: OpenAI model (default: `gpt-4`)
+- `--output PATH`: Output file for all narratives (JSON)
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli narrative generate-all \
+  --grant-name "Moving Stories" \
+  --openai-api-key "sk-..." \
+  --output "all_narratives.json"
+```
+
+---
+
+### Browser Commands (`browser`)
+
+#### `browser navigate`
+
+Navigate to a URL in the browser.
+
+**Options:**
+- `--url TEXT` (required): URL to navigate to
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli browser navigate \
+  --url "https://apply.4culture.org/login"
+```
+
+#### `browser snapshot`
+
+Take a snapshot of the current page.
+
+**Options:**
+- `--output PATH`: Output file for snapshot (JSON)
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli browser snapshot \
+  --output "page_snapshot.json"
+```
+
+#### `browser find`
+
+Find an element on the page.
+
+**Options:**
+- `--description TEXT` (required): Description of element to find
+- `--return-action`: Return action information
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli browser find \
+  --description "login button"
+```
+
+#### `browser click`
+
+Click an element on the page.
+
+**Options:**
+- `--description TEXT` (required): Description of element to click
+- `--element-ref TEXT`: Element reference from snapshot
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli browser click \
+  --description "login button or sign in button"
+```
+
+#### `browser type`
+
+Type text into an input field.
+
+**Options:**
+- `--description TEXT` (required): Description of input field
+- `--text TEXT` (required): Text to type
+- `--element-ref TEXT`: Element reference from snapshot
+- `--slowly`: Type one character at a time
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli browser type \
+  --description "username input field" \
+  --text "Keyisaccess"
+```
+
+#### `browser select`
+
+Select option(s) in a dropdown.
+
+**Options:**
+- `--description TEXT` (required): Description of dropdown
+- `--values TEXT` (required): Comma-separated list of values
+- `--element-ref TEXT`: Element reference from snapshot
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli browser select \
+  --description "grant type dropdown" \
+  --values "Arts,Community"
+```
+
+#### `browser screenshot`
+
+Take a screenshot of the current page.
+
+**Options:**
+- `--name TEXT`: Screenshot name
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli browser screenshot \
+  --name "login_page"
+```
+
+#### `browser wait`
+
+Wait for a condition on the page.
+
+**Options:**
+- `--text TEXT`: Text to wait for
+- `--text-gone TEXT`: Text to wait for to disappear
+- `--time INTEGER`: Time in seconds to wait
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli browser wait \
+  --time 5
+```
+
+---
+
+### Form Commands (`form`)
+
+#### `form start`
+
+Start a new grant application.
+
+**Options:**
+- `--grant-name TEXT` (required): Name of the grant
+- `--username TEXT`: 4Culture username
+- `--password TEXT`: 4Culture password
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli form start \
+  --grant-name "Moving Stories" \
+  --username "Keyisaccess" \
+  --password "Outlaw22!!"
+```
+
+#### `form extract-structure`
+
+Extract the structure of the application form.
+
+**Options:**
+- `--username TEXT`: 4Culture username
+- `--password TEXT`: 4Culture password
+- `--output PATH`: Output file for form structure
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli form extract-structure \
+  --output "form_structure.json"
+```
+
+#### `form fill`
+
+Fill form field(s).
+
+**Options:**
+- `--instructions-file PATH`: Field filling instructions file
+- `--field-name TEXT`: Single field name (for single field fill)
+- `--value TEXT`: Field value
+- `--field-type TEXT`: Field type (default: `text`)
+- `--username TEXT`: 4Culture username
+- `--password TEXT`: 4Culture password
+
+**Example:**
+```bash
+# Fill from instructions file
+python3 -m agents.grant_scraper.sdk_cli form fill \
+  --instructions-file "filling_instructions.json"
+
+# Fill single field
+python3 -m agents.grant_scraper.sdk_cli form fill \
+  --field-name "project_title" \
+  --value "Moving Stories Graphic Novel" \
+  --field-type "text"
+```
+
+#### `form fill-all`
+
+Fill all form fields from instructions file.
+
+**Options:**
+- `--instructions-file PATH` (required): Field filling instructions file
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli form fill-all \
+  --instructions-file "filling_instructions.json"
+```
+
+#### `form validate`
+
+Check for form validation errors.
+
+**Options:**
+- `--username TEXT`: 4Culture username
+- `--password TEXT`: 4Culture password
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli form validate
+```
+
+#### `form save`
+
+Save the application draft.
+
+**Options:**
+- `--username TEXT`: 4Culture username
+- `--password TEXT`: 4Culture password
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli form save
+```
+
+---
+
+### Workflow Commands (`workflow`)
+
+#### `workflow full`
+
+Run the complete automation workflow from start to finish.
+
+**Options:**
+- `--grant-name TEXT` (required): Name of the grant
+- `--doc PATH`: Document path
+- `--docs-folder PATH`: Path to docs folder (default: `docs`)
+- `--config PATH`: Configuration file path
+- `--username TEXT`: 4Culture username
+- `--password TEXT`: 4Culture password
+- `--dry-run`: Extract data but don't fill form
+- `--use-narratives`: Use OpenAI to generate narratives
+- `--openai-api-key TEXT`: OpenAI API key
+- `--narrative-model TEXT`: OpenAI model (default: `gpt-4`)
+- `--report PATH`: Report output path
+- `--db-path PATH`: Database path
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli workflow full \
+  --grant-name "Moving Stories" \
+  --username "Keyisaccess" \
+  --password "Outlaw22!!" \
+  --use-narratives \
+  --openai-api-key "sk-..." \
+  --report "workflow_report.md"
+```
+
+#### `workflow custom`
+
+Run a custom workflow with specified steps.
+
+**Options:**
+- `--grant-name TEXT` (required): Name of the grant
+- `--steps TEXT` (required): Comma-separated list of steps
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli workflow custom \
+  --grant-name "Moving Stories" \
+  --steps "extract,map,validate-map"
+```
+
+---
+
+### Database Commands (`database`)
+
+#### `database add`
+
+Add a grant to the database.
+
+**Options:**
+- `--name TEXT` (required): Grant name
+- `--identifier TEXT`: Grant identifier
+- `--deadline TEXT`: Deadline (YYYY-MM-DD or "Month DD, YYYY")
+- `--status TEXT`: Status (default: `planned`)
+- `--amount FLOAT`: Amount requested
+- `--organization TEXT`: Organization name
+- `--project-title TEXT`: Project title
+- `--description TEXT`: Description
+- `--priority INTEGER`: Priority (1-10)
+- `--db-path PATH`: Database path
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli database add \
+  --name "Moving Stories" \
+  --deadline "January 13, 2026" \
+  --status "planned" \
+  --priority 8
+```
+
+#### `database update`
+
+Update grant information.
+
+**Options:**
+- `--grant-id INTEGER` (required): Grant ID
+- `--status TEXT`: Status
+- `--progress INTEGER`: Progress percentage
+- `--current-step TEXT`: Current step
+- `--db-path PATH`: Database path
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli database update \
+  --grant-id 1 \
+  --status "in_progress" \
+  --progress 50
+```
+
+#### `database get`
+
+Get grant details.
+
+**Options:**
+- `--grant-id INTEGER` (required): Grant ID
+- `--db-path PATH`: Database path
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli database get \
+  --grant-id 1
+```
+
+#### `database list`
+
+List grants by status.
+
+**Options:**
+- `--status TEXT`: Filter by status
+- `--db-path PATH`: Database path
+
+**Example:**
+```bash
+# List all grants
+python3 -m agents.grant_scraper.sdk_cli database list
+
+# List only planned grants
+python3 -m agents.grant_scraper.sdk_cli database list \
+  --status "planned"
+```
+
+#### `database timeline`
+
+Get grants organized by month.
+
+**Options:**
+- `--db-path PATH`: Database path
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli database timeline
+```
+
+---
+
+### Report Commands (`report`)
+
+#### `report generate`
+
+Generate a completion report from workflow results.
+
+**Options:**
+- `--result-file PATH` (required): Path to workflow result file
+- `--output PATH`: Output path for report
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli report generate \
+  --result-file "workflow_result.json" \
+  --output "completion_report.md"
+```
+
+#### `report dashboard`
+
+Generate an HTML dashboard for grant planning.
+
+**Example:**
+```bash
+python3 -m agents.grant_scraper.sdk_cli report dashboard
+```
+
+---
+
+## Workflows
+
+### Complete Automation Workflow
+
+The `workflow full` command runs the complete automation process:
+
+1. **Data Extraction**: Extract grant data from documents
+2. **Data Validation**: Validate extracted data
+3. **Data Standardization**: Convert to standardized format
+4. **Field Mapping**: Map data to form fields
+5. **Narrative Generation** (optional): Generate AI narratives
+6. **Mapping Validation**: Validate field mappings
+7. **Browser Login**: Login to 4Culture portal
+8. **Navigation**: Navigate to grant application
+9. **Form Filling**: Fill all form fields
+10. **Validation**: Check for form errors
+11. **Save Draft**: Save application draft
+12. **Database Update**: Update grant tracking
+13. **Report Generation**: Generate completion report
+
+### Custom Workflow
+
+Use `workflow custom` to run specific steps:
+
+```bash
+python3 -m agents.grant_scraper.sdk_cli workflow custom \
+  --grant-name "Moving Stories" \
+  --steps "extract,standardize,map"
+```
+
+Available steps:
+- `extract`: Extract data from documents
+- `validate`: Validate extracted data
+- `standardize`: Standardize data format
+- `map`: Map data to form fields
+- `generate-narratives`: Generate AI narratives
+- `validate-map`: Validate field mappings
+- `login`: Login to portal
+- `navigate`: Navigate to application
+- `fill`: Fill form fields
+- `validate-form`: Check form errors
+- `save`: Save draft
+- `update-db`: Update database
+- `report`: Generate report
+
+---
+
+## Output Formats
+
+The CLI supports multiple output formats:
+
+### Human-Readable (Default)
+
+Default format with formatted text output.
+
+```bash
+python3 -m agents.grant_scraper.sdk_cli data extract \
+  --grant-name "Moving Stories"
+```
+
+### JSON Format
+
+Use `--json` flag for JSON output:
+
+```bash
+python3 -m agents.grant_scraper.sdk_cli --json data extract \
+  --grant-name "Moving Stories"
+```
+
+### YAML Format
+
+Use `--yaml` flag for YAML output:
+
+```bash
+python3 -m agents.grant_scraper.sdk_cli --yaml data extract \
+  --grant-name "Moving Stories"
+```
+
+---
+
+## Configuration
+
+### MCP Server Configuration
+
+Configure browser automation MCP servers:
+
+```bash
+python3 -m agents.grant_scraper.mcp_setup_cli configure
+```
+
+Options:
+- **Playwright MCP** (recommended): Local browser automation
+- **Cursor IDE Browser**: Built-in browser tools (Cursor IDE only)
+- **Browserbase/Stagehand**: Cloud browser automation (requires API key)
+
+### Environment Variables
+
+Set credentials as environment variables:
+
+```bash
+export 4CULTURE_USERNAME="Keyisaccess"
+export 4CULTURE_PASSWORD="Outlaw22!!"
+export OPENAI_API_KEY="sk-..."
+```
+
+### Configuration Files
+
+Configuration files are stored in:
+- MCP Server Config: `~/.mcp_servers.json`
+- Grant Database: `agents/grant_scraper/grants.db` (default)
+
+---
+
+## Examples
+
+### Example 1: Extract and Validate Data
+
+```bash
+# Extract data
+python3 -m agents.grant_scraper.sdk_cli data extract \
+  --grant-name "Moving Stories" \
+  --output "data.json"
+
+# Validate data
+python3 -m agents.grant_scraper.sdk_cli data validate \
+  --grant-name "Moving Stories"
+```
+
+### Example 2: Generate Narratives
+
+```bash
+# Generate all narratives
+python3 -m agents.grant_scraper.sdk_cli narrative generate-all \
+  --grant-name "Moving Stories" \
+  --openai-api-key "sk-..." \
+  --output "narratives.json"
+```
+
+### Example 3: Browser Automation
+
+```bash
+# Login
+python3 -m agents.grant_scraper.sdk_cli auth login \
+  --username "Keyisaccess" \
+  --password "Outlaw22!!"
+
+# Navigate and take snapshot
+python3 -m agents.grant_scraper.sdk_cli browser navigate \
+  --url "https://apply.4culture.org/draft-applications"
+
+python3 -m agents.grant_scraper.sdk_cli browser snapshot
+```
+
+### Example 4: Complete Workflow with Narratives
+
+```bash
+python3 -m agents.grant_scraper.sdk_cli workflow full \
+  --grant-name "Moving Stories: Short-Form Graphic Novels" \
+  --username "Keyisaccess" \
+  --password "Outlaw22!!" \
+  --use-narratives \
+  --openai-api-key "sk-..." \
+  --narrative-model "gpt-4" \
+  --report "workflow_report.md"
+```
+
+### Example 5: Database Management
+
+```bash
+# Add grant
+python3 -m agents.grant_scraper.sdk_cli database add \
+  --name "Moving Stories" \
+  --deadline "January 13, 2026" \
+  --status "planned" \
+  --priority 8
+
+# List grants
+python3 -m agents.grant_scraper.sdk_cli database list
+
+# Update grant status
+python3 -m agents.grant_scraper.sdk_cli database update \
+  --grant-id 1 \
+  --status "in_progress"
+
+# View timeline
+python3 -m agents.grant_scraper.sdk_cli database timeline
+```
+
+---
+
+## Troubleshooting
+
+### Browser Automation Issues
+
+**Problem**: Browser tools not available
+
+**Solution**:
+```bash
+# Configure MCP server
+python3 -m agents.grant_scraper.mcp_setup_cli configure
+
+# Or install Playwright
+pip install playwright
+playwright install chromium
+```
+
+**Problem**: Login fails
+
+**Solution**:
+- Verify credentials are correct
+- Check if MCP tools are properly initialized
+- Use `--skip-verification` to skip verification steps
+- Check screenshot at `agents/grant_scraper/screenshots/login_failed.png`
+
+### Data Extraction Issues
+
+**Problem**: No data extracted
+
+**Solution**:
+- Verify document format (should be markdown)
+- Check `--docs-folder` path is correct
+- Use `--doc` to specify a specific document
+- Check document contains grant-related information
+
+### Narrative Generation Issues
+
+**Problem**: Narratives not generated
+
+**Solution**:
+- Verify OpenAI API key is correct
+- Check API key has sufficient credits
+- Try different model (e.g., `gpt-3.5-turbo`)
+- Verify grant data is properly extracted first
+
+### Database Issues
+
+**Problem**: Database errors
+
+**Solution**:
+- Check database file permissions
+- Verify database path is correct
+- Use `--db-path` to specify custom path
+- Check SQLite is installed
+
+---
+
+## Best Practices
+
+### 1. Use Dry Run First
+
+Always test with `--dry-run` before actual submission:
+
+```bash
+python3 -m agents.grant_scraper.sdk_cli workflow full \
+  --grant-name "Moving Stories" \
+  --dry-run
+```
+
+### 2. Save Intermediate Results
+
+Save outputs at each step:
+
+```bash
+# Extract and save
+python3 -m agents.grant_scraper.sdk_cli data extract \
+  --grant-name "Moving Stories" \
+  --output "data.json"
+
+# Map and save
+python3 -m agents.grant_scraper.sdk_cli mapping map \
+  --grant-name "Moving Stories" \
+  --data-file "data.json" \
+  --output "mapped.json"
+```
+
+### 3. Use JSON Output for Automation
+
+Use `--json` flag for programmatic use:
+
+```bash
+python3 -m agents.grant_scraper.sdk_cli --json data extract \
+  --grant-name "Moving Stories" | jq '.data'
+```
+
+### 4. Track Grants in Database
+
+Always add grants to database for tracking:
+
+```bash
+python3 -m agents.grant_scraper.sdk_cli database add \
+  --name "Moving Stories" \
+  --deadline "January 13, 2026"
+```
+
+### 5. Generate Reports
+
+Generate reports after workflows:
+
+```bash
+python3 -m agents.grant_scraper.sdk_cli report generate \
+  --result-file "workflow_result.json"
+```
+
+---
+
+## Command Summary
+
+| Command Group | Commands | Description |
+|--------------|----------|-------------|
+| `auth` | `login`, `logout` | Authentication |
+| `data` | `extract`, `validate`, `standardize`, `identify-docs` | Data extraction |
+| `mapping` | `map`, `validate-map`, `create-instructions` | Field mapping |
+| `narrative` | `generate`, `generate-all` | Narrative generation |
+| `browser` | `navigate`, `snapshot`, `find`, `click`, `type`, `select`, `screenshot`, `wait` | Browser automation |
+| `form` | `start`, `extract-structure`, `fill`, `fill-all`, `validate`, `save` | Form automation |
+| `workflow` | `full`, `custom` | Workflow orchestration |
+| `database` | `add`, `update`, `get`, `list`, `timeline` | Database management |
+| `report` | `generate`, `dashboard` | Reporting |
+
+---
+
+## Additional Resources
+
+- **Quick Start Guide**: `QUICK_START.md`
+- **MCP Integration Guide**: `MCP_INTEGRATION_SUMMARY.md`
+- **MCP Server Runner Guide**: `MCP_SERVER_RUNNER_GUIDE.md`
+- **Main README**: `README.md`
+
+---
+
+## Support
+
+For issues, questions, or contributions:
+1. Check the troubleshooting section
+2. Review the example commands
+3. Check logs in `agents/grant_scraper/screenshots/` and `.cursor/debug.log`
+4. Verify all prerequisites are installed
+
+---
+
+**Version:** 1.0.0  
+**Last Updated:** December 23, 2025
+

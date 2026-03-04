@@ -1,0 +1,9 @@
+Starting automation workflow...
+Narrative generation enabled - will convert bullet points to complete prose
+Step 1: Extracting data for grant: Moving Stories...
+Step 2: Standardizing and mapping data to form fields
+Generated 5 narratives for form fields
+Step 3: Logging in to 4Culture portal
+...
+✅ Automation completed successfully!
+Report saved to: grant_application_report_Moving_Stories.md

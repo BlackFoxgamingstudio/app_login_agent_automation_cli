@@ -1,0 +1,19 @@
+# 4Culture Grant Application Automation CLI
+
+## Overview
+CLI and SDK for automating 4Culture grant applications. Uses Playwright for browser automation and supports MCP (Model Context Protocol). Features: workflow automation, data extraction from documents, AI narrative generation (OpenAI), grant database (SQLite), multiple output formats (JSON, YAML).
+
+## Documentation
+- Main: README.md
+- Quick start: docs/quick-start.md
+- Usage: docs/usage-examples.md
+- SDK: docs/sdk.md
+- MCP: docs/mcp/setup-guide.md
+
+## Usage
+- Install: pip install -e . && playwright install chromium
+- Run: python -m grant_automation_cli --help
+- Auth: python -m grant_automation_cli auth login
+
+## License
+MIT. See LICENSE.

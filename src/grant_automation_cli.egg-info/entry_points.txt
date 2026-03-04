@@ -1,0 +1,2 @@
+[console_scripts]
+grant-automation-cli = grant_automation_cli.sdk_cli:main

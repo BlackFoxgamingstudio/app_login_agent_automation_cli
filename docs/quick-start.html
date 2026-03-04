@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Start Guide - 4Culture Grant SDK</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1><a href="index.html" style="text-decoration: none; color: inherit;">4Culture Grant SDK</a></h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html#home">Home</a></li>
+                <li><a href="index.html#download">Download</a></li>
+                <li><a href="quick-start.html" class="active">Quick Start</a></li>
+                <li><a href="cli-reference.html">CLI Reference</a></li>
+                <li><a href="index.html#examples">Examples</a></li>
+                <li><a href="index.html#support">Support</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="section">
+        <div class="container">
+            <h1>Quick Start Guide</h1>
+            <p class="intro-text">Get up and running with the 4Culture Grant SDK in minutes.</p>
+
+            <div class="quick-start-content">
+                <div class="step-section">
+                    <h2>Step 1: Installation</h2>
+                    <p>Install the SDK and its dependencies:</p>
+                    <pre><code class="language-bash"># Clone the repository
+git clone https://github.com/your-org/grants-sdk.git
+cd grants-sdk
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Install Playwright browsers (for browser automation)
+playwright install chromium</code></pre>
+                </div>
+
+                <div class="step-section">
+                    <h2>Step 2: Configuration</h2>
+                    <p>Set up your credentials and API keys:</p>
+                    <pre><code class="language-bash"># Set environment variables
+export 4CULTURE_USERNAME="your_username"
+export 4CULTURE_PASSWORD="your_password"
+export OPENAI_API_KEY="your_openai_api_key"  # Optional, for narrative generation</code></pre>
+                    <p class="note">💡 <strong>Tip:</strong> You can also pass credentials directly via command-line arguments.</p>
+                </div>
+
+                <div class="step-section">
+                    <h2>Step 3: Verify Installation</h2>
+                    <p>Test that the SDK is installed correctly:</p>
+                    <pre><code class="language-bash"># Check CLI is available
+python3 -m agents.grant_scraper.sdk_cli --help
+
+# View available command groups
+python3 -m agents.grant_scraper.sdk_cli auth --help
+python3 -m agents.grant_scraper.sdk_cli data --help</code></pre>
+                </div>
+
+                <div class="step-section">
+                    <h2>Step 4: Your First Command</h2>
+                    <p>Extract data from grant documents:</p>
+                    <pre><code class="language-bash"># Extract data from documents
+python3 -m agents.grant_scraper.sdk_cli data extract \
+  --grant-name "Moving Stories: Short-Form Graphic Novels" \
+  --docs-folder docs \
+  --output extracted_data.json</code></pre>
+                    <p>This command will:</p>
+                    <ul>
+                        <li>Search for relevant documents in the <code>docs</code> folder</li>
+                        <li>Extract grant information, project details, and contact information</li>
+                        <li>Save the extracted data to <code>extracted_data.json</code></li>
+                    </ul>
+                </div>
+
+                <div class="step-section">
+                    <h2>Step 5: Login to 4Culture Portal</h2>
+                    <p>Authenticate with the 4Culture portal:</p>
+                    <pre><code class="language-bash"># Interactive login (recommended for first time)
+python3 -m agents.grant_scraper.sdk_cli auth login
+
+# Or non-interactive login
+python3 -m agents.grant_scraper.sdk_cli auth login \
+  --username "your_username" \
+  --password "your_password" \
+  --non-interactive</code></pre>
+                    <p class="note">⚠️ <strong>Note:</strong> Browser automation requires MCP tools. The SDK will guide you through setup on first use.</p>
+                </div>
+
+                <div class="step-section">
+                    <h2>Step 6: Run a Complete Workflow</h2>
+                    <p>Automate the entire grant application process:</p>
+                    <pre><code class="language-bash"># Run full workflow (dry-run mode)
+python3 -m agents.grant_scraper.sdk_cli workflow full \
+  --grant-name "Your Grant Name" \
+  --docs-folder docs \
+  --use-narratives \
+  --openai-api-key $OPENAI_API_KEY \
+  --dry-run</code></pre>
+                    <p>This workflow will:</p>
+                    <ol>
+                        <li>Extract data from documents</li>
+                        <li>Standardize the data format</li>
+                        <li>Map data to form fields</li>
+                        <li>Generate narratives (if enabled)</li>
+                        <li>Fill out the application form</li>
+                        <li>Save the draft</li>
+                    </ol>
+                </div>
+
+                <div class="step-section">
+                    <h2>Next Steps</h2>
+                    <ul>
+                        <li>📖 Read the <a href="cli-reference.html">complete CLI reference</a></li>
+                        <li>💡 Check out <a href="index.html#examples">example commands</a></li>
+                        <li>🔧 Learn about <a href="mcp-integration.html">MCP integration</a></li>
+                        <li>📊 Explore <a href="database.html">database management</a></li>
+                    </ul>
+                </div>
+
+                <div class="step-section">
+                    <h2>Common Issues</h2>
+                    <div class="issue">
+                        <h3>❌ "MCP tools not available"</h3>
+                        <p><strong>Solution:</strong> The SDK will automatically set up Playwright tools. If you see this error, run:</p>
+                        <pre><code class="language-bash">python3 -m agents.grant_scraper.mcp_setup_cli configure</code></pre>
+                    </div>
+                    <div class="issue">
+                        <h3>❌ "OpenAI API key required"</h3>
+                        <p><strong>Solution:</strong> Set the API key as an environment variable or pass it via <code>--openai-api-key</code> flag.</p>
+                    </div>
+                    <div class="issue">
+                        <h3>❌ "No documents found"</h3>
+                        <p><strong>Solution:</strong> Ensure your documents are in the <code>docs</code> folder and contain the grant name in their content.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="back-link">
+                <a href="index.html" class="btn btn-primary">← Back to Home</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 4Culture Grant SDK. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
