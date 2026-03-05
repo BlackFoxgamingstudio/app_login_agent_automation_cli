@@ -153,8 +153,8 @@ python3 -m agents.grant_scraper.mcp_setup_cli status
 
 # 4. Use SDK CLI
 python3 -m agents.grant_scraper.sdk_cli auth login \
-  --username "Keyisaccess" \
-  --password "Outlaw22!!"
+  --username "YOUR_USERNAME" \
+  --password "YOUR_PASSWORD"
 ```
 
 ## Process Management
@@ -294,8 +294,8 @@ python3 -m agents.grant_scraper.mcp_setup_cli status
 
 # 6. Use SDK CLI
 python3 -m agents.grant_scraper.sdk_cli auth login \
-  --username "Keyisaccess" \
-  --password "Outlaw22!!"
+  --username "YOUR_USERNAME" \
+  --password "YOUR_PASSWORD"
 
 # 7. Stop server when done
 python3 -m agents.grant_scraper.mcp_setup_cli stop-server

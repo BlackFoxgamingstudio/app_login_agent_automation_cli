@@ -29,7 +29,11 @@ try:
 except ImportError:
     NarrativeGenerator = None
 
+# Import Google Sites CLI
+from .google_sites import cli as gsite_cli
+
 # Import MCP browser integration
+
 try:
     from .mcp_browser_integration import MCPBrowserIntegration
 except ImportError:
@@ -1606,6 +1610,9 @@ def create_parser():
 
     subparsers = parser.add_subparsers(dest="command_group", help="Command group")
 
+    # Register Google Sites commands
+    gsite_cli.register_parser(subparsers)
+
     # AUTH commands
     auth_parser = subparsers.add_parser("auth", help="Authentication commands")
     auth_sub = auth_parser.add_subparsers(dest="command")
@@ -1902,8 +1909,14 @@ def main():
         ("report", "dashboard"): cli.cmd_report_dashboard,
     }
 
-    handler = command_map.get((args.command_group, args.command))
-    if handler:
+    handler = command_map.get((args.command_group, getattr(args, "command", None)))
+    if args.command_group == 'gsite':
+        try:
+            gsite_cli.handle_command(args)
+        except Exception as e:
+            logger.error(f"Error executing gsite command: {e}", exc_info=True)
+            cli._error(str(e), 1)
+    elif handler:
         try:
             handler(args)
         except Exception as e:

@@ -7,17 +7,17 @@
 ```bash
 # Basic login
 python3 -m agents.grant_scraper.sdk_cli auth login \
-  --username "Keyisaccess" \
-  --password "Outlaw22!!"
+  --username "YOUR_USERNAME" \
+  --password "YOUR_PASSWORD"
 
 # With JSON output
 python3 -m agents.grant_scraper.sdk_cli --json auth login \
-  --username "Keyisaccess" \
-  --password "Outlaw22!!"
+  --username "YOUR_USERNAME" \
+  --password "YOUR_PASSWORD"
 
 # Using environment variables
-export 4CULTURE_USERNAME="Keyisaccess"
-export 4CULTURE_PASSWORD="Outlaw22!!"
+export 4CULTURE_USERNAME="YOUR_USERNAME"
+export 4CULTURE_PASSWORD="YOUR_PASSWORD"
 python3 -m agents.grant_scraper.sdk_cli auth login
 ```
 

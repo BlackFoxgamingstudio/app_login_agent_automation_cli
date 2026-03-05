@@ -56,8 +56,8 @@ python3 -m agents.grant_scraper.mcp_setup_cli run-server --cmd "npx -y @modelcon
 4. **Use SDK CLI:**
    ```bash
    python3 -m agents.grant_scraper.sdk_cli auth login \
-     --username "Keyisaccess" \
-     --password "Outlaw22!!"
+     --username "YOUR_USERNAME" \
+     --password "YOUR_PASSWORD"
    ```
 
 ## Note

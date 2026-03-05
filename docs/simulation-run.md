@@ -511,8 +511,8 @@ Now we simulate the full automation process. This includes all the data extracti
 ```bash
 $ python -m agents.grant_scraper.cli automate \
   --grant-name "Moving Stories: Short-Form Graphic Novels for King County Metro Transit RapidRide" \
-  --username Keyisaccess \
-  --password "Outlaw22!!" \
+  --username YOUR_USERNAME \
+  --password "YOUR_PASSWORD" \
   --config agents/grant_scraper/grant_config.yaml \
   --report automation_report.md
 
@@ -543,7 +543,7 @@ The system identifies `docs/02-green-stem-expo-technical.md` as the relevant doc
 The extracted data is converted into a standardized format with consistent field names and data types. The FormMapper then maps each standardized field to the corresponding form field using the configuration file. All 25 fields are successfully mapped, with 8 marked as required and 17 as optional.
 
 **Step 3: Browser Login**
-In a real scenario, the system would use browser MCP tools to navigate to https://apply.4culture.org/login, enter the username "Keyisaccess" and password "Outlaw22!!", and submit the login form. The system would wait for the page to load and verify successful login by checking for the member center or draft applications page.
+In a real scenario, the system would use browser MCP tools to navigate to https://apply.4culture.org/login, enter the username "YOUR_USERNAME" and password "YOUR_PASSWORD", and submit the login form. The system would wait for the page to load and verify successful login by checking for the member center or draft applications page.
 
 **Step 4: Navigation to Grant Application**
 The system would navigate to https://apply.4culture.org/draft-applications and locate the "Moving Stories: Short-Form Graphic Novels for King County Metro Transit RapidRide" grant in the "Start A New Application" section. It would identify the correct link by matching the grant name.

@@ -14,8 +14,8 @@ In Cursor IDE, MCP browser tools are automatically available via the tool callin
 
 ```bash
 python3 -m agents.grant_scraper.sdk_cli auth login \
-  --username "Keyisaccess" \
-  --password "Outlaw22!!"
+  --username "YOUR_USERNAME" \
+  --password "YOUR_PASSWORD"
 ```
 
 ### Regular Terminal
@@ -141,13 +141,13 @@ python3 -m agents.grant_scraper.sdk_cli auth login --help
 
 # 2. Login (in Cursor IDE)
 python3 -m agents.grant_scraper.sdk_cli auth login \
-  --username "Keyisaccess" \
-  --password "Outlaw22!!"
+  --username "YOUR_USERNAME" \
+  --password "YOUR_PASSWORD"
 
 # 3. Verify login with JSON output
 python3 -m agents.grant_scraper.sdk_cli --json auth login \
-  --username "Keyisaccess" \
-  --password "Outlaw22!!"
+  --username "YOUR_USERNAME" \
+  --password "YOUR_PASSWORD"
 ```
 
 ## Integration with Workflows

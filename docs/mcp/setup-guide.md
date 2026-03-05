@@ -10,8 +10,8 @@ MCP tools are automatically available in Cursor IDE. Just run:
 
 ```bash
 python3 -m agents.grant_scraper.sdk_cli auth login \
-  --username "Keyisaccess" \
-  --password "Outlaw22!!"
+  --username "YOUR_USERNAME" \
+  --password "YOUR_PASSWORD"
 ```
 
 ### In Regular Terminal
@@ -203,8 +203,8 @@ python3 -m agents.grant_scraper.mcp_setup_cli status
 
 # Test login
 python3 -m agents.grant_scraper.sdk_cli auth login \
-  --username "Keyisaccess" \
-  --password "Outlaw22!!"
+  --username "YOUR_USERNAME" \
+  --password "YOUR_PASSWORD"
 ```
 
 ## Best Practices
@@ -234,8 +234,8 @@ python3 -m agents.grant_scraper.mcp_setup_cli status
 
 # 5. Use SDK CLI
 python3 -m agents.grant_scraper.sdk_cli auth login \
-  --username "Keyisaccess" \
-  --password "Outlaw22!!"
+  --username "YOUR_USERNAME" \
+  --password "YOUR_PASSWORD"
 ```
 
 ### Python API Usage

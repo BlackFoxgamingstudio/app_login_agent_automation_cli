@@ -1,8 +1,11 @@
 # Documentation
 
+- [SDK Landing Page](index.html) (HTML)
+- [Grant Planning Dashboard](index2.html) (HTML)
 - [Quick Start](quick-start.md)
 - [Usage Examples](usage-examples.md)
 - [SDK Reference](sdk.md)
+- [API Reference](api.md) (generated via MkDocs + mkdocstrings)
 - [CLI Reference](cli-reference.html) (HTML)
 - [Quick Start](quick-start.html) (HTML)
 
@@ -16,6 +19,7 @@
 
 ## Other
 
+- [Publishing to PyPI](publishing.md)
 - [Build Notes](build-notes.md)
 - [Example Output](example-output.md)
 - [Login Test Results](login-test-results.md)

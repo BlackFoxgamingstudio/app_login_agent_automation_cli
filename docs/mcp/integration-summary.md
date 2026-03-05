@@ -13,8 +13,8 @@ The browser login functionality has been tested and verified working using MCP b
 **Result:** ✅ **SUCCESS**
 
 - Successfully navigated to login page
-- Successfully filled username field: `Keyisaccess`
-- Successfully filled password field: `Outlaw22!!`
+- Successfully filled username field: `YOUR_USERNAME`
+- Successfully filled password field: `YOUR_PASSWORD`
 - Successfully clicked login button
 - Successfully authenticated
 - Redirected to: `https://apply.4culture.org/draft-applications`
@@ -88,8 +88,8 @@ The system has been enhanced with:
 ```bash
 # Login works automatically
 python3 -m agents.grant_scraper.sdk_cli auth login \
-  --username "Keyisaccess" \
-  --password "Outlaw22!!"
+  --username "YOUR_USERNAME" \
+  --password "YOUR_PASSWORD"
 ```
 
 ### In Regular Terminal
@@ -190,8 +190,8 @@ The SDK CLI automatically tries to load MCP tools using both methods:
 ```bash
 # SDK CLI will automatically try to load tools
 python3 -m agents.grant_scraper.sdk_cli auth login \
-  --username "Keyisaccess" \
-  --password "Outlaw22!!"
+  --username "YOUR_USERNAME" \
+  --password "YOUR_PASSWORD"
 ```
 
 If tools aren't available, the CLI provides clear instructions on how to set them up.

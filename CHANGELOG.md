@@ -43,5 +43,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Workflow automation, browser automation (Playwright), MCP integration
 - Data extraction, narrative generation (OpenAI), grant database management
 
-[Unreleased]: https://github.com/OWNER/REPO/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/OWNER/REPO/releases/tag/v1.0.0
+[Unreleased]: https://github.com/BlackFoxgamingstudio/app_login_agent_automation_cli/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/BlackFoxgamingstudio/app_login_agent_automation_cli/releases/tag/v1.0.0

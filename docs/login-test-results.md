@@ -18,8 +18,8 @@ December 23, 2025
    - Status: ✅ Form elements detected
 
 3. **Authentication**
-   - Username: Keyisaccess
-   - Password: Outlaw22!!
+   - Username: YOUR_USERNAME
+   - Password: YOUR_PASSWORD
    - Status: ✅ Login successful
 
 4. **Post-Login Verification**
@@ -34,20 +34,20 @@ December 23, 2025
 ```bash
 # Login command
 python3 -m agents.grant_scraper.sdk_cli auth login \
-  --username "Keyisaccess" \
-  --password "Outlaw22!!"
+  --username "YOUR_USERNAME" \
+  --password "YOUR_PASSWORD"
 
 # With JSON output
 python3 -m agents.grant_scraper.sdk_cli --json auth login \
-  --username "Keyisaccess" \
-  --password "Outlaw22!!"
+  --username "YOUR_USERNAME" \
+  --password "YOUR_PASSWORD"
 ```
 
 ### Using Environment Variables
 
 ```bash
-export 4CULTURE_USERNAME="Keyisaccess"
-export 4CULTURE_PASSWORD="Outlaw22!!"
+export 4CULTURE_USERNAME="YOUR_USERNAME"
+export 4CULTURE_PASSWORD="YOUR_PASSWORD"
 
 python3 -m agents.grant_scraper.sdk_cli auth login
 ```
@@ -64,8 +64,8 @@ mcp_tools = cli._get_mcp_browser_tools()
 
 if mcp_tools:
     automator = ApplicationAutomator(
-        username="Keyisaccess",
-        password="Outlaw22!!",
+        username="YOUR_USERNAME",
+        password="YOUR_PASSWORD",
         mcp_tools=mcp_tools
     )
     success = automator.login()

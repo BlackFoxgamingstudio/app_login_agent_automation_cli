@@ -105,6 +105,6 @@ pytest --cov=src/grant_automation_cli --cov-report=term-missing
 
 ## Questions?
 
-Open a [GitHub Discussion](https://github.com/OWNER/REPO/discussions) or an issue with the "question" label.
+Open a [GitHub Discussion](https://github.com/BlackFoxgamingstudio/app_login_agent_automation_cli/discussions) or an issue with the "question" label.
 
 Thank you for contributing!

@@ -33,14 +33,17 @@ dev = [
     "pytest-cov>=4.0.0",
     "ruff>=0.1.0",
     "pre-commit>=3.0.0",
+    "mkdocs>=1.5.0",
+    "mkdocstrings[python]>=0.24.0",
+    "mkdocs-material>=9.0.0",
 ]
 
 [project.scripts]
 grant-automation-cli = "grant_automation_cli.sdk_cli:main"
 
 [project.urls]
-Repository = "https://github.com/OWNER/REPO"
-Documentation = "https://github.com/OWNER/REPO#readme"
+Repository = "https://github.com/BlackFoxgamingstudio/app_login_agent_automation_cli"
+Documentation = "https://github.com/BlackFoxgamingstudio/app_login_agent_automation_cli#readme"
 
 [tool.setuptools.packages.find]
 where = ["src"]

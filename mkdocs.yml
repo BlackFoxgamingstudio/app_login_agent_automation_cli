@@ -1,0 +1,48 @@
+# MkDocs + mkdocstrings for API documentation
+# Build: mkdocs build  (output in site/)
+# Serve: mkdocs serve
+
+site_name: Grant Automation CLI
+site_description: CLI and SDK for 4Culture grant application automation
+site_url: https://github.com/BlackFoxgamingstudio/app_login_agent_automation_cli
+repo_url: https://github.com/BlackFoxgamingstudio/app_login_agent_automation_cli
+edit_uri: edit/main/docs/
+
+docs_dir: docs
+site_dir: site
+
+nav:
+  - Home: README.md
+  - Quick Start: quick-start.md
+  - Usage Examples: usage-examples.md
+  - SDK Reference: sdk.md
+  - API Reference: api.md
+  - MCP:
+    - Setup Guide: mcp/setup-guide.md
+    - Server Runner: mcp/server-runner-guide.md
+    - Integration Summary: mcp/integration-summary.md
+    - Tools Setup: mcp/tools-setup.md
+    - Commands Test Results: mcp/commands-test-results.md
+  - Other:
+    - Build Notes: build-notes.md
+    - Example Output: example-output.md
+    - Login Test Results: login-test-results.md
+    - Simulation Run: simulation-run.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [src]
+          options:
+            docstring_style: google
+            show_source: true
+            show_root_heading: true
+            separate_signature: true
+            filters: ["!^_"]
+
+markdown_extensions:
+  - pymdownx.superfences
+  - pymdownx.highlight
