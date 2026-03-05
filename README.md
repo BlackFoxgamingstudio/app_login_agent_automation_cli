@@ -7,10 +7,10 @@
 
 **Version:** 1.0.0
 
-CLI and SDK for automating 4Culture grant applications. Browser automation (Playwright), MCP support, data extraction, AI narrative generation (OpenAI), and grant database (SQLite).
+CLI and SDK for automating 4Culture grant applications and fully automated Google Sites generation. Browser automation (Playwright), MCP support, data extraction, AI narrative generation (OpenAI), and SQLite databases.
 
-## 🚀 How to Run the Solution: 3 Technical Paths
-As the Head Technical Documentation Product Manager, I've outlined the three primary execution paths for our automation suite. Please select the option that best suits your current deployment needs.
+## 🚀 How to Run the Solution: 4 Technical Paths
+As the Head Technical Documentation Product Manager, I've outlined the four primary execution paths for our automation suite. Please select the option that best suits your current deployment needs.
 
 ### Option 1: CLI Login Authorization (Standalone Auth)
 **Purpose:** Validates credentials and initiates an authenticated session without running the full pipeline. Ideal for initial setup and credential verification.
@@ -51,11 +51,28 @@ As the Head Technical Documentation Product Manager, I've outlined the three pri
    ```
 4. If testing visually, ensure Playwright is set to headed mode (`headless=False`) within the agent's initialization parameters to monitor the runtime securely.
 
+### Option 4: Google Sites Automation (End-to-End)
+**Purpose:** Fully automates the creation of Google Sites from Markdown templates. It bypasses auth detection and handles the Canvas UI natively.
+**Steps:**
+1. **Initialize Workspace:** Run the init command to create your workspace directory and generate the `.md` templates from the database.
+   ```bash
+   python3 -m src.grant_automation_cli gsite init --dir my_new_website
+   ```
+2. **Fill Templates:** Open the generated `business_profile.md`, `design_preferences.md`, and `page_content.md` files in your target directory and fill out the details.
+3. **Authenticate:** Run the Google auth command *once* to sign in manually. The session is saved to avoid bot detection loops.
+   ```bash
+   python3 -m src.grant_automation_cli gsite auth
+   ```
+4. **Build the Site:** Run the build command to have Playwright open Google Sites, set the name, apply your theme, and dynamically generate pages and text blocks.
+   ```bash
+   python3 -m src.grant_automation_cli gsite build --dir my_new_website
+   ```
+
 ---
 
 ## Table of Contents
 
-- [How to Run the Solution: 3 Technical Paths](#-how-to-run-the-solution-3-technical-paths)
+- [How to Run the Solution: 4 Technical Paths](#-how-to-run-the-solution-4-technical-paths)
 - [Overview](#overview)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
@@ -68,10 +85,11 @@ As the Head Technical Documentation Product Manager, I've outlined the three pri
 <!-- Add a screenshot or GIF here if desired, e.g. ![CLI demo](docs/screenshots/cli-demo.png) -->
 
 - **Workflow automation** — End-to-end from document extraction to form submission
+- **Google Sites generation** — Automated site creation, theme selection, and page building
 - **Browser automation** — Playwright with optional MCP (Model Context Protocol) integration
 - **Data extraction** — From markdown and structured documents
 - **Narrative generation** — OpenAI-powered prose from bullet points
-- **Grant database** — SQLite-backed tracking and reporting
+- **Embedded Databases** — SQLite-backed tracking, reporting, and template management
 - **Output formats** — Human-readable, JSON, YAML
 
 ## Installation
@@ -107,14 +125,23 @@ playwright install chromium
 ## Quick Start
 
 ```bash
-# Interactive login
-python -m grant_automation_cli auth login
+# Interactive login (Grants)
+python -m src.grant_automation_cli auth login
 
 # Extract data from documents
-python -m grant_automation_cli data extract --grant-name "Your Grant" --docs-folder docs --output grant_data.json
+python -m src.grant_automation_cli data extract --grant-name "Your Grant" --docs-folder docs --output grant_data.json
 
-# Full workflow (see docs for options)
-python -m grant_automation_cli workflow full --grant-name "Your Grant" --username USER --password PASS
+# Full workflow (Grants)
+python -m src.grant_automation_cli workflow full --grant-name "Your Grant" --username USER --password PASS
+
+# Initialize Google Sites templates
+python -m src.grant_automation_cli gsite init --dir target_folder
+
+# Authenticate Google Sites (Run once)
+python -m src.grant_automation_cli gsite auth
+
+# Build Google Site automatically
+python -m src.grant_automation_cli gsite build --dir target_folder
 ```
 
 [!NOTE]
