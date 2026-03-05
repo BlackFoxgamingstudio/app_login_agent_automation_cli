@@ -9,8 +9,28 @@
 
 CLI and SDK for automating 4Culture grant applications and fully automated Google Sites generation. Browser automation (Playwright), MCP support, data extraction, AI narrative generation (OpenAI), and SQLite databases.
 
-## 🚀 How to Run the Solution: 4 Technical Paths
-As the Head Technical Documentation Product Manager, I've outlined the four primary execution paths for our automation suite. Please select the option that best suits your current deployment needs.
+## 🌐 NEW FEATURE: Google Sites Full Automation
+We have introduced a complete end-to-end automation suite for building Google Sites. This system handles authentication bypass, uses a local SQLite database for templates, and natively interacts with the Google Sites Shadow DOM to build sites dynamically.
+
+### Steps to Build a Google Site
+1. **Initialize Workspace & Templates:** Run the init command. This initializes `google_sites.db` and extracts the `.md` templates (`business_profile.md`, `design_preferences.md`, `page_content.md`) into your target directory.
+   ```bash
+   python3 -m src.grant_automation_cli gsite init --dir my_new_website
+   ```
+2. **Fill Out the Templates:** Open the generated `.md` files in your `my_new_website` folder and fill them with your business details, page content, and desired theme/colors.
+3. **Authenticate (Run Once):** Start the Google auth command to sign in manually. We bypass Google's bot detection, and your session is saved persistently. 
+   ```bash
+   python3 -m src.grant_automation_cli gsite auth
+   ```
+4. **Build the Site:** Execute the build command. Playwright will automatically open Google Sites, set the site name, apply your theme, create all pages, and insert your content blocks!
+   ```bash
+   python3 -m src.grant_automation_cli gsite build --dir my_new_website
+   ```
+
+---
+
+## 🚀 How to Run the Grant Automation: 3 Technical Paths
+As the Head Technical Documentation Product Manager, I've outlined the three primary execution paths for our grant automation suite. Please select the option that best suits your current deployment needs.
 
 ### Option 1: CLI Login Authorization (Standalone Auth)
 **Purpose:** Validates credentials and initiates an authenticated session without running the full pipeline. Ideal for initial setup and credential verification.
@@ -51,28 +71,12 @@ As the Head Technical Documentation Product Manager, I've outlined the four prim
    ```
 4. If testing visually, ensure Playwright is set to headed mode (`headless=False`) within the agent's initialization parameters to monitor the runtime securely.
 
-### Option 4: Google Sites Automation (End-to-End)
-**Purpose:** Fully automates the creation of Google Sites from Markdown templates. It bypasses auth detection and handles the Canvas UI natively.
-**Steps:**
-1. **Initialize Workspace:** Run the init command to create your workspace directory and generate the `.md` templates from the database.
-   ```bash
-   python3 -m src.grant_automation_cli gsite init --dir my_new_website
-   ```
-2. **Fill Templates:** Open the generated `business_profile.md`, `design_preferences.md`, and `page_content.md` files in your target directory and fill out the details.
-3. **Authenticate:** Run the Google auth command *once* to sign in manually. The session is saved to avoid bot detection loops.
-   ```bash
-   python3 -m src.grant_automation_cli gsite auth
-   ```
-4. **Build the Site:** Run the build command to have Playwright open Google Sites, set the name, apply your theme, and dynamically generate pages and text blocks.
-   ```bash
-   python3 -m src.grant_automation_cli gsite build --dir my_new_website
-   ```
-
 ---
 
 ## Table of Contents
 
-- [How to Run the Solution: 4 Technical Paths](#-how-to-run-the-solution-4-technical-paths)
+- [🌐 NEW FEATURE: Google Sites Full Automation](#-new-feature-google-sites-full-automation)
+- [How to Run the Grant Automation: 3 Technical Paths](#-how-to-run-the-grant-automation-3-technical-paths)
 - [Overview](#overview)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
