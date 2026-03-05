@@ -1,5 +1,9 @@
 # 4Culture Grant Application Automation CLI
 
+<a href="https://youtu.be/InuNUrHMChQ" target="_blank">
+  <img align="right" src="https://img.youtube.com/vi/InuNUrHMChQ/0.jpg" alt="Building Google Sites Automation Video" width="340">
+</a>
+
 [![CI](https://github.com/BlackFoxgamingstudio/app_login_agent_automation_cli/actions/workflows/ci.yml/badge.svg)](https://github.com/BlackFoxgamingstudio/app_login_agent_automation_cli/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/BlackFoxgamingstudio/app_login_agent_automation_cli/graph/badge.svg)](https://codecov.io/gh/BlackFoxgamingstudio/app_login_agent_automation_cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
