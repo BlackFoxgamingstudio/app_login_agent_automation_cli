@@ -67,6 +67,24 @@ As the Head Technical Documentation Product Manager, I've outlined the three pri
    - *Form Submission:* Mapping and entering the extracted data.
 4. Review the generated YAML/JSON summaries in the root or database directories for final validation.
 
+### Interactive Grant Planning Dashboard
+To complement the CLI workflow, this solution includes a fully interactive, locally-hosted **Grant Application Planning Dashboard**. It visualizes grant timelines, statuses, and priorities based on your database.
+
+![Grant Planning Dashboard Demo](docs/assets/grant_dashboard_demo.png)
+
+**How to Launch the Dashboard:**
+1. Navigate to your terminal.
+2. The dashboard is a standalone HTML file located at `docs/index2.html`. You can open it directly in your browser:
+   ```bash
+   # On Mac:
+   open docs/index2.html
+   ```
+3. Alternatively, host it locally using Python to simulate a production environment:
+   ```bash
+   python3 -m http.server 8000 --directory docs
+   ```
+   Then navigate to `http://localhost:8000/index2.html` in your browser.
+
 ### Option 3: Browser Subagent Login (Interactive/Debug Mode)
 **Purpose:** Utilizes an AI-driven or specialized subagent script to step through the browser login sequence visually or via an independent process. Ideal for UI debugging or bypassing CAPTCHAs/dynamic elements.
 **Steps:**
