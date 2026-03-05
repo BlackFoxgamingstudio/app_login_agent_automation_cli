@@ -1,6 +1,6 @@
 # 4Culture Grant Application Automation CLI
 
-website: [![CI](https://blackfoxgamingstudio.github.io/app_login_agent_automation_cli/)]
+ [![website](https://blackfoxgamingstudio.github.io/app_login_agent_automation_cli/)]
 
 <a href="https://youtu.be/InuNUrHMChQ" target="_blank">
   <img align="right" src="https://img.youtube.com/vi/InuNUrHMChQ/0.jpg" alt="Building Google Sites Automation Video" width="340">
