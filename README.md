@@ -12,6 +12,8 @@ CLI and SDK for automating 4Culture grant applications and fully automated Googl
 ## 🌐 NEW FEATURE: Google Sites Full Automation
 We have introduced a complete end-to-end automation suite for building Google Sites. This system handles authentication bypass, uses a local SQLite database for templates, and natively interacts with the Google Sites Shadow DOM to build sites dynamically.
 
+![Google Sites Automation Demo](docs/assets/gsite_builder_demo.png)
+
 ### Steps to Build a Google Site
 1. **Initialize Workspace & Templates:** Run the init command. This initializes `google_sites.db` and extracts the `.md` templates (`business_profile.md`, `design_preferences.md`, `page_content.md`) into your target directory.
    ```bash

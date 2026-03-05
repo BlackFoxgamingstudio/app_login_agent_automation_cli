@@ -197,8 +197,13 @@ def build_google_site(business_profile: dict, design_prefs: dict, pages: list):
             print("Simulated Build Complete! Google's canvas UI requires intensive selector mapping.")
             print("For full implementation, each canvas component needs precise XPath/aria tracking.")
             
-            # Keep browser open a bit to let the user see the result
+            # Capture snapshot for the README
+            print("Capturing snapshot for documentation...")
+            page.screenshot(path="docs/assets/gsite_builder_demo.png")
+            
+            # Wait at the end to observe
             time.sleep(10)
+            print("\nBrowser session ending...")
             
         except Exception as e:
             print(f"Error during automation: {e}")
