@@ -1,6 +1,10 @@
 """
 Grant Dashboard Generator
+
+DEVELOPER GUIDELINE: XSS Prevention
 Creates HTML dashboard for grant planning and tracking.
+Since this logic builds raw HTML strings directly, ALL external data injected 
+into the templates MUST be properly escaped to prevent Cross-Site Scripting (XSS).
 """
 
 import logging
@@ -3172,7 +3176,7 @@ narrative_generation:
                 const a = document.createElement('a');
                 a.href = url;
                 a.download = 'grant-dashboard.csv';
-                a.click();
+                a.click();  # type: ignore
             }
         }
         

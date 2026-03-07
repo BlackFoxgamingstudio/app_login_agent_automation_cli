@@ -1,11 +1,15 @@
 """
 Seed database with 2026 grants.
-Adds all relevant grants for 2026 to the grant planning database.
+
+DEVELOPER GUIDELINE: Database Seeding & Idempotency
+Adds all relevant grants for 2026 to the grant planning database. Ensure 
+the seed script uses UPSERT operations (INSERT ... ON CONFLICT) to remain 
+idempotent, preventing duplicate records on multiple executions.
 """
 
 import logging
 
-from .grant_database import GrantDatabase
+from grant_automation_cli.grant_database import GrantDatabase
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -204,65 +208,53 @@ def seed_2026_grants():
 
     for grant_data in grants_2026:
         try:
-            # Check if grant already exists
-            existing_grants = db.get_grants_by_status()
-            existing = next(
-                (g for g in existing_grants if g.get("identifier") == grant_data["identifier"]),
-                None,
-            )
+            # Idempotent write via UPSERT in GrantDatabase
+            grant_id = db.add_grant(grant_data)
+            logger.info(f"✅ Upserted grant: {grant_data['name']}")
+            added_count += 1
 
-            if existing:
-                logger.info(f"Grant already exists: {grant_data['name']} (ID: {existing['id']})")
-                skipped_count += 1
-            else:
-                grant_id = db.add_grant(grant_data)
-                logger.info(f"✅ Added grant: {grant_data['name']} (ID: {grant_id})")
-                added_count += 1
+            # Add milestone for deadline
+            if grant_data.get("deadline"):
+                try:
+                    # Parse deadline to YYYY-MM-DD format
+                    deadline_parts = grant_data["deadline"].replace(",", "").split()
+                    if len(deadline_parts) >= 3:
+                        month_map = {
+                            "January": "01",
+                            "February": "02",
+                            "March": "03",
+                            "April": "04",
+                            "May": "05",
+                            "June": "06",
+                            "July": "07",
+                            "August": "08",
+                            "September": "09",
+                            "October": "10",
+                            "November": "11",
+                            "December": "12",
+                        }
+                        month = month_map.get(deadline_parts[0], "01")
+                        day = deadline_parts[1].zfill(2)
+                        year = deadline_parts[2]
+                        deadline_iso = f"{year}-{month}-{day}"
+                        db.add_milestone(
+                            grant_id,
+                            "Application Deadline",
+                            deadline_iso,
+                            "Final deadline for grant application submission",
+                        )
+                except RuntimeError as e:
+                    logger.warning(f"Could not add milestone for grant {grant_id}: {e}")
 
-                # Add milestone for deadline
-                if grant_data.get("deadline"):
-                    try:
-                        # Parse deadline to YYYY-MM-DD format
-                        deadline_parts = grant_data["deadline"].replace(",", "").split()
-                        if len(deadline_parts) >= 3:
-                            month_map = {
-                                "January": "01",
-                                "February": "02",
-                                "March": "03",
-                                "April": "04",
-                                "May": "05",
-                                "June": "06",
-                                "July": "07",
-                                "August": "08",
-                                "September": "09",
-                                "October": "10",
-                                "November": "11",
-                                "December": "12",
-                            }
-                            month = month_map.get(deadline_parts[0], "01")
-                            day = deadline_parts[1].zfill(2)
-                            year = deadline_parts[2]
-                            deadline_iso = f"{year}-{month}-{day}"
-                            db.add_milestone(
-                                grant_id,
-                                "Application Deadline",
-                                deadline_iso,
-                                "Final deadline for grant application submission",
-                            )
-                    except Exception as e:
-                        logger.warning(f"Could not add milestone for grant {grant_id}: {e}")
-
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error adding grant {grant_data['name']}: {e}")
             skipped_count += 1
 
     db.close()
 
     print("\n✅ Database seeding complete!")
-    print(f"   Added: {added_count} grants")
-    print(f"   Updated: {updated_count} grants")
-    print(f"   Skipped: {skipped_count} grants (already exist)")
-    print(f"\n   Total grants in database: {added_count + updated_count}")
+    print(f"   Processed: {added_count} grants via UPSERT")
+    print(f"\n   Total grants actively managed: {added_count}")
     print("\n   Generate dashboard to view: python -m grant_automation_cli.cli dashboard")
 
 

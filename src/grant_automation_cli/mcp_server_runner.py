@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """
 MCP Server Runner
+
+DEVELOPER GUIDELINE: Process Lifecycle Management
 Provides functionality to start, stop, and manage MCP server processes.
+When managing subprocesses, ensure graceful degradation. Send SIGTERM before SIGKILL 
+to prevent ghost/zombie browser instances from persisting and hoarding system memory.
 """
 
 import json
@@ -57,7 +61,7 @@ class MCPServerRunner:
                                     logger.info(f"Found running server: {server_name} (PID: {pid})")
                             except psutil.NoSuchProcess:
                                 pass
-            except Exception as e:
+            except RuntimeError as e:
                 logger.warning(f"Error loading server PIDs: {e}")
 
     def _save_running_servers(self):
@@ -70,7 +74,7 @@ class MCPServerRunner:
         try:
             with open(self.pid_file, "w") as f:
                 json.dump(pid_data, f, indent=2)
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error saving server PIDs: {e}")
 
     def start_server(
@@ -142,7 +146,7 @@ class MCPServerRunner:
                     logger.error(f"Error: {stderr}")
                 return False
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error starting server '{server_name}': {e}")
             return False
 

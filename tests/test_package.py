@@ -1,4 +1,11 @@
-"""Basic package and CLI tests (no browser/MCP required)."""
+"""
+Basic package and CLI tests (no browser/MCP required).
+
+DEVELOPER GUIDELINE: Unit Testing Speed
+Keep core package tests lightweight and fast. They should not rely on external 
+services, databases, or slow browser initializations. Mock dependencies heavily 
+to ensure these run in milliseconds.
+"""
 
 from grant_automation_cli import (
     DataExtractor,

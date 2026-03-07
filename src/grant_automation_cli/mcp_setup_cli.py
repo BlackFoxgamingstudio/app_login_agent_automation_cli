@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """
 MCP Tools Setup CLI
+
+DEVELOPER GUIDELINE: CLI Boundaries
 Interactive tool for configuring MCP servers and injecting browser tools.
+Keep command logic delegated to other modules (`MCPServerRunner`, `MCPServerConfig`). 
+This file should strictly handle user I/O and argument parsing.
 """
 
 import argparse
@@ -298,7 +302,7 @@ Examples:
     if handler:
         try:
             handler(args)
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error: {e}", exc_info=True)
             sys.exit(1)
     else:

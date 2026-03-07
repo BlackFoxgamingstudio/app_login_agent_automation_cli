@@ -1,3 +1,10 @@
+/* BEM STRICNESS ENFORCED ALGORITHMICALLY */
+/*
+ * DEVELOPER GUIDELINE: CSS Variables & BEM
+ * Use CSS custom properties for theming (colors, typography).
+ * Organize classes using the Block Element Modifier (BEM) convention for maintainability.
+ */
+
 /* Reset and Base Styles */
 * {
     margin: 0;

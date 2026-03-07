@@ -1,5 +1,10 @@
 """
 CLI for managing grant database and generating dashboard.
+
+DEVELOPER GUIDELINE:
+This is a lightweight wrapper for database inputs and presentations.
+Do not embed complex business logic here. Validation should occur in the 
+`GrantDatabase` class, not the CLI parser.
 """
 
 import argparse

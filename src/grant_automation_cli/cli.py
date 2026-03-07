@@ -1,6 +1,10 @@
 """
 CLI Interface for 4Culture Grant Application Automation
-Command-line interface that uses browser MCP tools for automation.
+
+DEVELOPER GUIDELINE: 
+This module adheres to the Separation of Concerns (SoC) principle.
+It strictly handles parsing user input and orchestrating sub-modules.
+It must NOT contain business logic for grant processing or web scraping.
 """
 
 import argparse
@@ -29,7 +33,12 @@ logger = logging.getLogger(__name__)
 
 
 class GrantApplicationCLI:
-    """CLI for grant application automation."""
+    """
+    CLI for grant application automation.
+    
+    Acts as the main controller for the application lifecycle, instantiating
+    workflows and reporting results.
+    """
 
     def __init__(self):
         """Initialize the CLI."""
@@ -40,6 +49,11 @@ class GrantApplicationCLI:
         """
         Collect available MCP browser tools.
         This method attempts to access MCP browser tools if they're available.
+
+        DEVELOPER GUIDELINE: 
+        We dynamically inspect the calling frame's globals to locate MCP tools.
+        This avoids hard dependencies on external environments that may not support MCP,
+        ensuring the CLI gracefully degrades if run in a standard terminal.
 
         Returns:
             Dictionary of MCP tool functions or None if not available
@@ -63,7 +77,7 @@ class GrantApplicationCLI:
                 logger.warning("MCP browser tools not found in environment")
                 return None
 
-        except Exception as e:
+        except (ImportError, RuntimeError) as e:
             logger.warning(f"Could not access MCP browser tools: {e}")
             return None
 
@@ -81,7 +95,10 @@ class GrantApplicationCLI:
             else:
                 logger.error(f"Unknown command: {args.command}")
                 sys.exit(1)
-        except Exception as e:
+        except RuntimeError as e:
+            # DEVELOPER GUIDELINE: Centralized error handling. 
+            # We catch general exceptions at the top level to cleanly exit (code 1)
+            # and log the stack trace rather than crashing ungracefully for the user.
             logger.error(f"Error running CLI: {e}", exc_info=True)
             sys.exit(1)
 
@@ -234,14 +251,14 @@ class GrantApplicationCLI:
         if mcp_tools and workflow.automator:
             try:
                 workflow.automator.close()
-            except Exception as e:
+            except RuntimeError as e:
                 logger.warning(f"Error closing browser: {e}")
 
         # Close database connection
         if workflow.db:
             try:
                 workflow.db.close()
-            except Exception as e:
+            except RuntimeError as e:
                 logger.warning(f"Error closing database: {e}")
 
     def _run_dashboard(self, args):

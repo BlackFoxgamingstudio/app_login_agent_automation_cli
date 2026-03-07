@@ -1,6 +1,10 @@
 """
 Automation Workflow for 4Culture Grant Applications
-Orchestrates the complete automation process.
+
+DEVELOPER GUIDELINE: Orchestration Layer
+This module orchestrates the entire automation pipeline. It should not contain
+low-level scraping or parsing logic itself. It must act strictly as a Director,
+coordinating the DataExtractor, Automator, and Dashboard generation.
 """
 
 import json
@@ -72,7 +76,7 @@ class AutomationWorkflow:
                     narrative_config = config.get("narrative_generation", {})
                     if narrative_config and not use_narratives:
                         use_narratives = narrative_config.get("enabled", False)
-            except Exception as e:
+            except (IOError, yaml.YAMLError) as e:
                 logger.warning(f"Error loading narrative config: {e}")
 
         # Initialize narrative generator if enabled
@@ -106,7 +110,7 @@ class AutomationWorkflow:
             except ValueError as e:
                 logger.error(str(e))
                 raise  # Re-raise ValueError so user knows they need to provide API key
-            except Exception as e:
+            except (RuntimeError, IOError) as e:
                 logger.warning(
                     f"Failed to initialize narrative generator: {e}. Continuing without narratives."
                 )
@@ -129,7 +133,7 @@ class AutomationWorkflow:
             try:
                 self.db = GrantDatabase()
                 logger.info("Grant database initialized for tracking")
-            except Exception as e:
+            except (RuntimeError, IOError) as e:
                 logger.warning(f"Could not initialize grant database: {e}")
 
         # Workflow state
@@ -146,6 +150,11 @@ class AutomationWorkflow:
     ) -> Dict[str, Any]:
         """
         Run the complete automation workflow.
+
+        DEVELOPER GUIDELINE: Error Boundaries
+        The workflow must catch and record all sub-component exceptions to generate 
+        a meaningful final report, ensuring the CLI doesn't exit abruptly without 
+        saving the state of successful partial steps.
 
         Args:
             grant_name: Name of the grant to apply for
@@ -232,7 +241,7 @@ class AutomationWorkflow:
             if self.db:
                 try:
                     self._update_database(grant_name, grant_data, mapped_fields, result)
-                except Exception as e:
+                except (RuntimeError, IOError) as e:
                     logger.warning(f"Error updating database: {e}")
 
             if dry_run:
@@ -345,10 +354,10 @@ class AutomationWorkflow:
             if self.db:
                 try:
                     self._update_database_final(grant_name, result)
-                except Exception as e:
+                except (RuntimeError, IOError) as e:
                     logger.warning(f"Error in final database update: {e}")
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error in automation workflow: {e}", exc_info=True)
             result["errors"].append(str(e))
             result["steps_failed"].append(self.workflow_state.get("current_step", "unknown"))

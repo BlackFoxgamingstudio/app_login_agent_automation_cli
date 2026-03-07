@@ -1,6 +1,10 @@
 """
 Grant Planning Database
-Stores grant information, application status, and planning data.
+
+DEVELOPER GUIDELINE:
+This module manages the SQLite interaction for grant application state.
+It must never execute raw user input to prevent SQL injection. All queries 
+must use parameterized execution (the `?` syntax).
 """
 
 import json
@@ -19,6 +23,10 @@ class GrantDatabase:
     def __init__(self, db_path: str = "grants.db"):
         """
         Initialize the grant database.
+
+        DEVELOPER GUIDELINE:
+        Always ensure the parent directory containing the db exists prior to connection,
+        preventing 'OperationalError: unable to open database file' on fresh installs.
 
         Args:
             db_path: Path to SQLite database file
@@ -137,7 +145,10 @@ class GrantDatabase:
         """
         cursor = self.conn.cursor()
 
-        # Parse deadline to timestamp
+        # DEVELOPER GUIDELINE: Date parsing robustness.
+        # User-supplied dates or dates scraped from web varied. 
+        # Attempt to parse standard ISO format first, fallback to verbose format.
+        # Silently pass to store None if unparseable, rather than breaking the insertion.
         deadline_ts = None
         if grant_data.get("deadline"):
             try:
@@ -152,7 +163,7 @@ class GrantDatabase:
 
         cursor.execute(
             """
-            INSERT INTO grants (
+            INSERT OR REPLACE INTO grants (
                 name, identifier, deadline, deadline_timestamp, status,
                 amount_requested, organization_name, project_title,
                 description, focus_areas, eligibility_requirements,
@@ -217,6 +228,9 @@ class GrantDatabase:
             updates = ["status = ?", "updated_at = CURRENT_TIMESTAMP"]
             values = [status]
 
+            # DEVELOPER GUIDELINE: Sanitized Dynamic Updates
+            # We explicitly check kwargs against an allowable list of columns rather than
+            # executing arbitrary kwarg names as columns, neutralizing a potential SQL injection vector.
             for key, value in kwargs.items():
                 if key in [
                     "progress_percentage",

@@ -1,6 +1,11 @@
 """
 Form Field Mapper for Grant Applications
+
+DEVELOPER GUIDELINE: Loose Coupling
 Maps extracted data to 4Culture form fields.
+This acts as an Anti-Corruption Layer between our internal data model 
+and the target website's specific HTML form names. Do not hardcode form field 
+names here; load them from configuration files when possible.
 """
 
 import logging
@@ -67,7 +72,7 @@ class FormMapper:
                         }
                         if not self.use_narratives:
                             self.use_narratives = narrative_config_from_file.get("enabled", False)
-            except Exception as e:
+            except (IOError, yaml.YAMLError) as e:
                 logger.warning(f"Error loading narrative config: {e}")
 
     def load_mappings(self, config_path: str):
@@ -81,7 +86,7 @@ class FormMapper:
             with open(config_path, "r") as f:
                 config = yaml.safe_load(f)
                 self.field_mappings = config.get("field_mappings", {})
-        except Exception as e:
+        except (IOError, yaml.YAMLError) as e:
             logger.error(f"Error loading mappings from {config_path}: {e}")
             self.field_mappings = self._get_default_mappings()
 
@@ -298,7 +303,7 @@ class FormMapper:
                 if narrative:
                     self.narrative_cache[cache_key] = narrative
                     return narrative
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error generating narrative for {field_name}: {e}")
 
         return None

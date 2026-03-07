@@ -1,6 +1,11 @@
 """
 MCP Browser Integration for Grant Application Automation
+
+DEVELOPER GUIDELINE: Adapter Pattern & Resiliency
 Integrates with MCP browser tools (Browserbase/Stagehand) for actual browser automation.
+This module is an Adapter. It must catch exceptions thrown by upstream MCP servers
+and translate them into unified Application errors or return graceful "False/None" checks.
+Never assume a stable WebSocket connection.
 """
 
 import logging
@@ -64,7 +69,7 @@ class MCPBrowserIntegration:
                         )
                         + "\n"
                     )
-            except Exception:
+            except RuntimeError:
                 pass
             # #endregion
 
@@ -99,7 +104,7 @@ class MCPBrowserIntegration:
                             )
                             + "\n"
                         )
-                except Exception:
+                except RuntimeError:
                     pass
                 # #endregion
                 logger.info("Playwright browser tools initialized (no session needed)")
@@ -138,13 +143,13 @@ class MCPBrowserIntegration:
                         )
                         + "\n"
                     )
-            except Exception:
+            except RuntimeError:
                 pass
             # #endregion
             logger.warning("No MCP browser tools available")
             return False
 
-        except Exception as e:
+        except RuntimeError as e:
             # #region agent log
             try:
                 with open("/tmp/grant_automation_debug.log", "a") as f:
@@ -162,7 +167,7 @@ class MCPBrowserIntegration:
                         )
                         + "\n"
                     )
-            except Exception as e:
+            except RuntimeError as e:
                 pass
             # #endregion
             logger.error(f"Error initializing browser: {e}")
@@ -261,7 +266,7 @@ class MCPBrowserIntegration:
                         # #endregion
                         logger.info(f"Navigated to: {url} (using Playwright)")
                         return True
-                except Exception as e:
+                except RuntimeError as e:
                     # #region agent log
                     with open("/tmp/grant_automation_debug.log", "a") as f:
                         f.write(
@@ -290,7 +295,7 @@ class MCPBrowserIntegration:
                     time.sleep(2)  # Wait for page load
                     logger.info(f"Navigated to: {url} (using Cursor IDE browser)")
                     return True
-                except Exception as e:
+                except RuntimeError as e:
                     logger.warning(f"Cursor IDE navigate failed: {e}, trying alternatives")
 
             # Try Browserbase/Stagehand tools
@@ -312,7 +317,7 @@ class MCPBrowserIntegration:
                 logger.warning("Navigate tool not available")
                 return False
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error navigating to {url}: {e}")
             return False
 
@@ -334,7 +339,7 @@ class MCPBrowserIntegration:
                     if result:
                         logger.info("Snapshot taken (using Playwright)")
                         return result
-                except Exception as e:
+                except RuntimeError as e:
                     logger.warning(f"Playwright snapshot failed: {e}, trying alternatives")
 
             # Try Cursor IDE browser snapshot
@@ -344,7 +349,7 @@ class MCPBrowserIntegration:
                     result = cursor_snapshot()
                     logger.info("Snapshot taken (using Cursor IDE browser)")
                     return result
-                except Exception as e:
+                except RuntimeError as e:
                     logger.warning(f"Cursor IDE snapshot failed: {e}, trying alternatives")
 
             # Try Browserbase/Stagehand observe tool
@@ -369,7 +374,7 @@ class MCPBrowserIntegration:
                 logger.warning("Observe tool not available")
                 return None
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error taking snapshot: {e}")
             return None
 
@@ -536,7 +541,7 @@ class MCPBrowserIntegration:
                 logger.warning("Observe tool not available")
                 return None
 
-        except Exception as e:
+        except RuntimeError as e:
             # #region agent log
             with open("/tmp/grant_automation_debug.log", "a") as f:
                 f.write(
@@ -588,7 +593,7 @@ class MCPBrowserIntegration:
                         time.sleep(1)
                         logger.info(f"Clicked: {element_description} (using Playwright)")
                         return True
-                except Exception as e:
+                except RuntimeError as e:
                     logger.warning(f"Playwright click failed: {e}, trying alternatives")
 
             # First, find the element if ref not provided
@@ -627,7 +632,7 @@ class MCPBrowserIntegration:
             logger.warning(f"Could not click element: {element_description}")
             return False
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error clicking element '{element_description}': {e}")
             return False
 
@@ -681,7 +686,7 @@ class MCPBrowserIntegration:
                         )
                         + "\n"
                     )
-            except Exception as log_err:
+            except RuntimeError as log_err:
                 logger.error(f"Log write error in type_text entry: {log_err}")
             # #endregion
 
@@ -713,7 +718,7 @@ class MCPBrowserIntegration:
                         )
                         + "\n"
                     )
-            except Exception as log_err:
+            except RuntimeError as log_err:
                 logger.error(f"Log write error: {log_err}")
             # #endregion
 
@@ -740,7 +745,7 @@ class MCPBrowserIntegration:
                                 )
                                 + "\n"
                             )
-                    except Exception:
+                    except RuntimeError:
                         pass
                     # #endregion
                     # For Playwright, use description directly - no need to find element first
@@ -776,7 +781,7 @@ class MCPBrowserIntegration:
                                     )
                                     + "\n"
                                 )
-                        except Exception:
+                        except RuntimeError:
                             pass
                         # #endregion
                         logger.info(f"Typed text into {element_description} (using Playwright)")
@@ -799,10 +804,10 @@ class MCPBrowserIntegration:
                                     )
                                     + "\n"
                                 )
-                        except Exception:
+                        except RuntimeError:
                             pass
                         # #endregion
-                except Exception as e:
+                except RuntimeError as e:
                     # #region agent log
                     try:
                         with open("/tmp/grant_automation_debug.log", "a") as f:
@@ -820,7 +825,7 @@ class MCPBrowserIntegration:
                                 )
                                 + "\n"
                             )
-                    except Exception:
+                    except RuntimeError:
                         pass
                     # #endregion
                     logger.warning(f"Playwright type failed: {e}, trying alternatives")
@@ -867,7 +872,7 @@ class MCPBrowserIntegration:
             logger.warning(f"Could not type into element: {element_description}")
             return False
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error typing into element '{element_description}': {e}")
             return False
 
@@ -920,7 +925,7 @@ class MCPBrowserIntegration:
             logger.warning(f"Could not select option in: {element_description}")
             return False
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error selecting option in '{element_description}': {e}")
             return False
 
@@ -945,7 +950,7 @@ class MCPBrowserIntegration:
                     if result:
                         logger.info(f"Screenshot saved: {result} (using Playwright)")
                         return result
-                except Exception as e:
+                except RuntimeError as e:
                     logger.warning(f"Playwright screenshot failed: {e}, trying alternatives")
 
             # Try Cursor IDE browser screenshot
@@ -958,7 +963,7 @@ class MCPBrowserIntegration:
                     cursor_screenshot(filename=filename)
                     logger.info(f"Screenshot saved: {filepath} (using Cursor IDE browser)")
                     return filepath
-                except Exception as e:
+                except RuntimeError as e:
                     logger.warning(f"Cursor IDE screenshot failed: {e}, trying alternatives")
 
             screenshot_tool = None
@@ -980,7 +985,7 @@ class MCPBrowserIntegration:
                 logger.warning("Screenshot tool not available")
                 return None
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error taking screenshot: {e}")
             return None
 
@@ -1003,7 +1008,7 @@ class MCPBrowserIntegration:
                         self.current_url = result
                         logger.info(f"Got URL: {result} (using Playwright)")
                         return result
-                except Exception as e:
+                except RuntimeError as e:
                     logger.warning(f"Playwright get_url failed: {e}, trying alternatives")
 
             # Try Cursor IDE browser get_url
@@ -1016,7 +1021,7 @@ class MCPBrowserIntegration:
                     elif isinstance(result, str):
                         return result
                     return str(result) if result else None
-                except Exception as e:
+                except RuntimeError as e:
                     logger.warning(f"Cursor IDE get_url failed: {e}, trying alternatives")
 
             # Try Browserbase/Stagehand get_url
@@ -1043,7 +1048,7 @@ class MCPBrowserIntegration:
             logger.warning("Get URL tool not available")
             return None
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error getting current URL: {e}")
             return None
 
@@ -1076,7 +1081,7 @@ class MCPBrowserIntegration:
                     else:
                         playwright_wait(2.0)
                     return True
-                except Exception as e:
+                except RuntimeError as e:
                     logger.warning(f"Playwright wait failed: {e}, trying alternatives")
 
             wait_tool = self.mcp_tools.get("cursor_ide_browser_wait_for")
@@ -1096,7 +1101,7 @@ class MCPBrowserIntegration:
                     time.sleep(2)
                 return True
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.warning(f"Error in wait_for: {e}, using fallback")
             if time_seconds:
                 time.sleep(time_seconds)
@@ -1116,7 +1121,7 @@ class MCPBrowserIntegration:
                     playwright_close()
                     logger.info("Browser closed (using Playwright)")
                     return
-                except Exception as e:
+                except RuntimeError as e:
                     logger.warning(f"Playwright close failed: {e}, trying alternatives")
 
             if self.use_multi_session and self.session_id:
@@ -1129,5 +1134,5 @@ class MCPBrowserIntegration:
                 if close_tool:
                     close_tool()
                     logger.info("Browser session closed")
-        except Exception as e:
+        except RuntimeError as e:
             logger.warning(f"Error closing browser: {e}")

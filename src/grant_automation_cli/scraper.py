@@ -1,6 +1,10 @@
 """
 4Culture Grant Scraper
+
+DEVELOPER GUIDELINE: Web Scraping Resiliency 
 Automates login and grant list retrieval from 4Culture application portal.
+Use resilient selectors (e.g., data attributes) over structural paths. Implement 
+robust wait/retry logic for dynamic content, and degrade gracefully on changes.
 """
 
 import os

@@ -1,6 +1,11 @@
 """
 Data Extractor for Grant Applications
+
+DEVELOPER GUIDELINE: Data Integrity
 Identifies relevant documents and extracts grant-specific data.
+Parsing unstructured Markdown into structured JSON is highly fragile.
+Always validate outputs using Pydantic or strict dictionary checks before 
+passing data downstream to the automator.
 """
 
 import logging
@@ -67,7 +72,7 @@ class DataExtractor:
                     relevant_docs.append(str(md_file))
                     self.parsed_documents[str(md_file)] = parsed
 
-            except Exception as e:
+            except (ValueError, IOError) as e:
                 logger.warning(f"Error parsing {md_file}: {e}")
                 continue
 
@@ -110,7 +115,7 @@ class DataExtractor:
             if doc_path not in self.parsed_documents:
                 try:
                     self.parsed_documents[doc_path] = self.parser.parse_markdown_file(doc_path)
-                except Exception as e:
+                except (ValueError, IOError) as e:
                     logger.error(f"Error parsing {doc_path}: {e}")
                     continue
 
@@ -250,6 +255,10 @@ class DataExtractor:
     def get_standardized_data(self, grant_data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Convert extracted data to standardized format for form filling.
+
+        DEVELOPER GUIDELINE: Schema Normalization
+        Different documents may name fields differently. This method bridges the gap
+        between unstructured extraction and the strict demands of the `form_mapper`.
 
         Args:
             grant_data: Extracted grant data dictionary

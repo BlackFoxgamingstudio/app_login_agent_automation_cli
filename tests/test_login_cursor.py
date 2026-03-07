@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """
 Test login using Cursor IDE MCP browser tools.
+
+DEVELOPER GUIDELINE: Environment Diagnostics
+When writing tests that depend on specific runner environments (like Cursor IDE), 
+clearly document the requirements and provide informative skip messages or 
+fallback states if the environment is not matched.
+
 This script demonstrates how to use MCP tools in Cursor IDE environment.
 """
 

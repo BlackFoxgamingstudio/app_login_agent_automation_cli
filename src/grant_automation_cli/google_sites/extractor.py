@@ -1,5 +1,15 @@
+"""
+Google Sites Data Extractor
+
+DEVELOPER GUIDELINE: Robust Data Extraction
+Parses markdown templates into structured dictionaries. Use defensive 
+parsing strategies and handle missing or malformed data gracefully without 
+crashing the extraction process.
+"""
+
 import os
 import re
+
 
 def extract_business_profile(filepath: str) -> dict:
     """Parses business_profile.md into a dictionary."""

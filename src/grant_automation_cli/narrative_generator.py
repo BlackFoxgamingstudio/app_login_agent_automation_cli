@@ -1,6 +1,10 @@
 """
 Narrative Generator for Grant Applications
+
+DEVELOPER GUIDELINE: Prompt Engineering & AI Non-Determinism
 Uses OpenAI API to convert structured data into complete narrative prose.
+Treat all LLM outputs as untrusted data. Ensure strict input bounding, use explicit 
+system prompts to limit hallucinations, and enforce text formatting constraints.
 """
 
 import logging
@@ -382,7 +386,7 @@ Generate a complete technical narrative incorporating ALL technical information 
                 pass
 
             return None
-        except Exception as e:
+        except RuntimeError as e:
             logger.warning(f"Error getting API key: {e}")
             return None
 
@@ -392,7 +396,7 @@ Generate a complete technical narrative incorporating ALL technical information 
         if self._client is None and self.api_key:
             try:
                 self._client = openai.OpenAI(api_key=self.api_key)
-            except Exception as e:
+            except RuntimeError as e:
                 logger.error(f"Error initializing OpenAI client: {e}")
                 return None
         return self._client
@@ -579,7 +583,7 @@ Generate a complete technical narrative incorporating ALL technical information 
                     continue
                 else:
                     return None
-            except Exception as e:
+            except RuntimeError as e:
                 logger.error(f"Error calling OpenAI API: {e}")
                 return None
 

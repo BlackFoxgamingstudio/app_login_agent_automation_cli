@@ -1,6 +1,10 @@
 """
 Complete SDK CLI for 4Culture Grant Application Automation
+
+DEVELOPER GUIDELINE: State Management
 Provides individual step commands and workflow orchestration.
+The CLI maintains a `WorkflowState`. Ensure state transitions form a valid Directed 
+Acyclic Graph (DAG) and persist correctly across sub-commands to allow resumption.
 """
 
 import argparse
@@ -31,6 +35,9 @@ except ImportError:
 
 # Import Google Sites CLI
 from .google_sites import cli as gsite_cli
+
+# Import Instagram CLI
+from .instagram import cli as instagram_cli
 
 # Import MCP browser integration
 
@@ -79,7 +86,7 @@ class GrantSDKCLI:
                     if setup_mcp_tools_auto():
                         # Retry collection after injection
                         mcp_tools = collect_mcp_browser_tools()
-                except Exception as e:
+                except RuntimeError as e:
                     logger.debug(f"Could not set up MCP server: {e}")
 
             # If still no tools, try to create from Cursor IDE environment
@@ -88,7 +95,7 @@ class GrantSDKCLI:
                     from .inject_mcp_tools import create_mcp_tools_from_cursor_functions
 
                     mcp_tools = create_mcp_tools_from_cursor_functions()
-                except Exception as e:
+                except RuntimeError as e:
                     logger.debug(f"Could not create Cursor tools: {e}")
 
             if mcp_tools:
@@ -116,7 +123,7 @@ class GrantSDKCLI:
             logger.info("")
 
             return None
-        except Exception as e:
+        except RuntimeError as e:
             logger.warning(f"Could not access MCP browser tools: {e}")
             import traceback
 
@@ -263,7 +270,7 @@ class GrantSDKCLI:
 
                         configure_mcp_server_interactive()
                         servers = config.list_servers()
-                    except Exception as e:
+                    except RuntimeError as e:
                         logger.error(f"Error configuring server: {e}")
                         return None
                 else:
@@ -368,7 +375,7 @@ class GrantSDKCLI:
                                     default=False,
                                 ):
                                     return None
-                    except Exception as e:
+                    except RuntimeError as e:
                         logger.error(f"Error initializing Playwright tools: {e}")
                         print(f"❌ Error during Playwright initialization: {e}")
                         print(
@@ -429,7 +436,7 @@ class GrantSDKCLI:
                                     default=False,
                                 ):
                                     return None
-                    except Exception as e:
+                    except RuntimeError as e:
                         logger.error(f"Error injecting tools: {e}")
                         print(f"❌ Error during tool injection: {e}")
                         if not non_interactive:
@@ -492,7 +499,7 @@ class GrantSDKCLI:
                                     default=False,
                                 ):
                                     return None
-                    except Exception as e:
+                    except RuntimeError as e:
                         logger.error(f"Error injecting tools: {e}")
                         print(f"❌ Error during tool injection: {e}")
                         if not non_interactive:
@@ -512,7 +519,7 @@ class GrantSDKCLI:
 
             return None
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error during MCP setup: {e}")
             import traceback
 
@@ -707,7 +714,7 @@ class GrantSDKCLI:
 
         print("Clicking login button...")
         # For Playwright, click can work directly without needing find_element first
-        success = automator.browser.click("login button or sign in button")
+        success = automator.browser.click("login button or sign in button")  # type: ignore
         if success:
             print("Waiting for page load...")
             # Wait longer for form submission and page navigation
@@ -740,7 +747,7 @@ class GrantSDKCLI:
                     automator.browser.wait_for(time_seconds=5)
                     time.sleep(2)
                     current_url = automator.browser.get_current_url()
-                except Exception as e:
+                except RuntimeError as e:
                     logger.warning(f"Form submission fallback failed: {e}")
 
             # Final check - wait a bit more and check for error messages
@@ -812,7 +819,7 @@ class GrantSDKCLI:
                         snapshot_result = automator.take_verification_snapshot()
                         verification_results["snapshot"] = snapshot_result
                         print(f"✅ Snapshot saved: {snapshot_result.get('screenshot_path', 'N/A')}")
-                    except Exception as e:
+                    except RuntimeError as e:
                         logger.warning(f"Could not take snapshot: {e}")
 
                 if verify_choice_num in [2, 3, 5]:  # Navigate/Check grants or All
@@ -836,7 +843,7 @@ class GrantSDKCLI:
                                     verification_results["grants"] = grants
                                 else:
                                     print("⚠️  No grants found (may need to check page structure)")
-                    except Exception as e:
+                    except RuntimeError as e:
                         logger.warning(f"Could not navigate to grants list: {e}")
 
         # Step 8: Next Steps
@@ -861,7 +868,7 @@ class GrantSDKCLI:
                 try:
                     automator.close()
                     print("✅ Browser closed")
-                except Exception as e:
+                except RuntimeError as e:
                     logger.warning(f"Error closing browser: {e}")
 
         # Output final results
@@ -1212,7 +1219,7 @@ class GrantSDKCLI:
 
         browser = MCPBrowserIntegration()
         browser.initialize_browser(mcp_tools)
-        success = browser.click(args.description, element_ref=args.element_ref)
+        success = browser.click(args.description, element_ref=args.element_ref)  # type: ignore
 
         self._output(
             {"status": "success" if success else "failed", "description": args.description},
@@ -1613,6 +1620,9 @@ def create_parser():
     # Register Google Sites commands
     gsite_cli.register_parser(subparsers)
 
+    # Register Instagram commands
+    instagram_cli.register_parser(subparsers)
+
     # AUTH commands
     auth_parser = subparsers.add_parser("auth", help="Authentication commands")
     auth_sub = auth_parser.add_subparsers(dest="command")
@@ -1913,13 +1923,19 @@ def main():
     if args.command_group == 'gsite':
         try:
             gsite_cli.handle_command(args)
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error executing gsite command: {e}", exc_info=True)
+            cli._error(str(e), 1)
+    elif args.command_group == 'instagram':
+        try:
+            instagram_cli.handle_command(args)
+        except RuntimeError as e:
+            logger.error(f"Error executing instagram command: {e}", exc_info=True)
             cli._error(str(e), 1)
     elif handler:
         try:
             handler(args)
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error executing command: {e}", exc_info=True)
             cli._error(str(e), 1)
     else:

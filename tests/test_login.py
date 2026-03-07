@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """
 Test script for browser login functionality.
+
+DEVELOPER GUIDELINE: Integration Testing & Boundaries
+Integration tests interacting with external services (like 4Culture) should be 
+marked (e.g., `@pytest.mark.integration`) so they can be easily excluded from 
+fast local test runs. Handle missing environment variables gracefully.
+
 This demonstrates how to use the SDK CLI login command programmatically.
 """
 

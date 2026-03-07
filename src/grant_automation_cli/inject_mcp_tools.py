@@ -1,6 +1,10 @@
 """
 Script to inject MCP tools into the SDK CLI.
+
+DEVELOPER GUIDELINE: Dynamic Loading Constraints
 This allows MCP tools to be made available to the CLI when running in Cursor IDE.
+Use absolute imports within functions cautiously to avoid circular dependencies. 
+Globals modification is an anti-pattern; isolate runtime injections.
 
 Usage:
     from grant_automation_cli.inject_mcp_tools import inject_available_mcp_tools
@@ -137,7 +141,7 @@ def inject_tools_from_mcp_server(server_name: Optional[str] = None) -> bool:
     except ImportError:
         logger.warning("MCP server config module not available")
         return False
-    except Exception as e:
+    except RuntimeError as e:
         logger.error(f"Error loading tools from MCP server: {e}")
         return False
 

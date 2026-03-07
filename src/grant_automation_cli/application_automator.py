@@ -1,6 +1,10 @@
 """
 Application Automator for 4Culture Grant Applications
+
+DEVELOPER GUIDELINE:
 Extends GrantScraper with form automation capabilities using browser automation.
+This class must handle state carefully. Browser sessions can crash unexpectedly.
+Always assume the page could be in an indeterminate state and use explicit waits.
 """
 
 import logging
@@ -65,7 +69,7 @@ class ApplicationAutomator(GrantScraper):
                         )
                         + "\n"
                     )
-            except Exception as e:
+            except IOError as e:
                 logger.error(f"Log error: {e}")
             # #endregion
             result = self.browser.initialize_browser(mcp_tools)
@@ -96,7 +100,7 @@ class ApplicationAutomator(GrantScraper):
                         )
                         + "\n"
                     )
-            except Exception as e:
+            except IOError as e:
                 logger.error(f"Log error: {e}")
             # #endregion
         else:
@@ -120,7 +124,7 @@ class ApplicationAutomator(GrantScraper):
                         )
                         + "\n"
                     )
-            except Exception as e:
+            except IOError as e:
                 logger.error(f"Log error: {e}")
             # #endregion
 
@@ -148,7 +152,7 @@ class ApplicationAutomator(GrantScraper):
                 logger.error(f"Grant application '{grant_name}' not found")
                 return False
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error starting new application: {e}")
             self._take_screenshot("error_starting_application")
             return False
@@ -163,7 +167,7 @@ class ApplicationAutomator(GrantScraper):
                 self.browser.take_screenshot("draft_applications_page")
                 return True
             return False
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error navigating to draft applications: {e}")
             return False
 
@@ -184,7 +188,7 @@ class ApplicationAutomator(GrantScraper):
             for description in link_descriptions:
                 element = self.browser.find_element(description)
                 if element:
-                    success = self.browser.click(description)
+                    success = self.browser.click(description)  # type: ignore
                     if success:
                         self.browser.wait_for(time_seconds=3)
                         self.browser.take_screenshot(
@@ -195,7 +199,7 @@ class ApplicationAutomator(GrantScraper):
             logger.warning(f"Could not find grant application link for: {grant_name}")
             return False
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error clicking grant application link: {e}")
             return False
 
@@ -220,13 +224,18 @@ class ApplicationAutomator(GrantScraper):
 
             return form_structure
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error extracting form structure: {e}")
             return {"fields": [], "pages": [], "current_page": 1}
 
     def fill_form_field(self, field_name: str, value: str, field_type: str = "text") -> bool:
         """
         Fill a single form field.
+
+        DEVELOPER GUIDELINE: Form Field Locators
+        Web forms change frequently. Relying on strict ID match is preferred,
+        but for dynamic forms, ARIA labels or normalized neighbor text should be used.
+        Log heavily when field locators fail to aid rapid debugging.
 
         Args:
             field_name: Name or identifier of the field
@@ -259,7 +268,7 @@ class ApplicationAutomator(GrantScraper):
                 logger.warning(f"Failed to fill field: {field_name}")
                 return False
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error filling field '{field_name}': {e}")
             return False
 
@@ -295,7 +304,7 @@ class ApplicationAutomator(GrantScraper):
                 # Small delay between fields
                 time.sleep(0.5)
 
-            except Exception as e:
+            except RuntimeError as e:
                 result["failed_fields"].append(field_name)
                 result["errors"].append(f"{field_name}: {str(e)}")
                 result["success"] = False
@@ -313,11 +322,11 @@ class ApplicationAutomator(GrantScraper):
             elif action == "select":
                 return self.fill_form_field(field_name, value, "select")
             elif action == "click":
-                return self.browser.click(f"{field_name} button or checkbox")
+                return self.browser.click(f"{field_name} button or checkbox")  # type: ignore
             else:
                 logger.warning(f"Unknown action type: {action}")
                 return False
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error executing field action: {e}")
             return False
 
@@ -345,7 +354,7 @@ class ApplicationAutomator(GrantScraper):
             for description in page_descriptions:
                 element = self.browser.find_element(description)
                 if element:
-                    success = self.browser.click(description)
+                    success = self.browser.click(description)  # type: ignore
                     if success:
                         self.browser.wait_for(time_seconds=2)
                         self.browser.take_screenshot(f"form_page_{page_number}")
@@ -354,12 +363,12 @@ class ApplicationAutomator(GrantScraper):
             # If no navigation found, try "Next" or "Continue" button
             next_button = self.browser.find_element("Next button or Continue button")
             if next_button:
-                return self.browser.click("Next button or Continue button")
+                return self.browser.click("Next button or Continue button")  # type: ignore
 
             logger.warning(f"Could not find navigation to page {page_number}")
             return False
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error navigating to page {page_number}: {e}")
             return False
 
@@ -386,7 +395,7 @@ class ApplicationAutomator(GrantScraper):
             for description in save_descriptions:
                 element = self.browser.find_element(description)
                 if element:
-                    success = self.browser.click(description)
+                    success = self.browser.click(description)  # type: ignore
                     if success:
                         # Wait for save to complete
                         self.browser.wait_for(time_seconds=3)
@@ -404,7 +413,7 @@ class ApplicationAutomator(GrantScraper):
             logger.warning("Could not find save button")
             result["message"] = "Save button not found"
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error saving draft: {e}")
             result["message"] = str(e)
             self.browser.take_screenshot("error_saving_draft")
@@ -444,7 +453,7 @@ class ApplicationAutomator(GrantScraper):
                     elif isinstance(element, str):
                         errors.append(element)
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error checking validation: {e}")
 
         return errors
@@ -455,7 +464,7 @@ class ApplicationAutomator(GrantScraper):
             screenshot_path = self.browser.take_screenshot(name)
             if screenshot_path:
                 logger.info(f"Screenshot saved: {screenshot_path}")
-        except Exception as e:
+        except RuntimeError as e:
             logger.warning(f"Error taking screenshot: {e}")
 
     def get_current_page_url(self) -> Optional[str]:
@@ -513,7 +522,7 @@ class ApplicationAutomator(GrantScraper):
             # Find and click login button
             login_button = self.browser.find_element("login button or sign in button")
             if login_button:
-                self.browser.click("login button or sign in button")
+                self.browser.click("login button or sign in button")  # type: ignore
                 self.browser.wait_for(time_seconds=3)
 
                 # Verify login by checking URL or page content
@@ -530,7 +539,7 @@ class ApplicationAutomator(GrantScraper):
                 logger.warning("Could not find login button")
                 return False
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error during login: {e}")
             self.browser.take_screenshot("login_error")
             return False
@@ -539,7 +548,7 @@ class ApplicationAutomator(GrantScraper):
         """Close the browser session."""
         try:
             self.browser.close_browser()
-        except Exception as e:
+        except RuntimeError as e:
             logger.warning(f"Error closing browser: {e}")
 
     def take_verification_snapshot(self) -> Dict[str, Any]:
@@ -555,7 +564,7 @@ class ApplicationAutomator(GrantScraper):
                 "current_url": current_url,
                 "timestamp": datetime.now().isoformat(),
             }
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error taking verification snapshot: {e}")
             return {"error": str(e), "timestamp": datetime.now().isoformat()}
 
@@ -600,6 +609,6 @@ class ApplicationAutomator(GrantScraper):
 
             return grants
 
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error getting grants list: {e}")
             return []

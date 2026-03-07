@@ -1,7 +1,14 @@
-import os
-import pytest
+"""
+Google Sites Extractor Tests
+
+DEVELOPER GUIDELINE: Test Data Isolation
+Use `tmp_path` fixtures to ensure tests create isolated, temporary files 
+that do not pollute the project directory. Keep test assertions focused and 
+descriptive.
+"""
 
 from grant_automation_cli.google_sites import extractor
+
 
 def test_extract_business_profile(tmp_path):
     business_file = tmp_path / "business_profile.md"

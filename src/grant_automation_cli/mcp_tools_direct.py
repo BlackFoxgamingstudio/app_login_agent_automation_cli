@@ -1,6 +1,10 @@
 """
 Direct MCP tools wrapper for Cursor IDE environment.
+
+DEVELOPER GUIDELINE: Environment Coupling Avoidance
 This module provides direct access to MCP browser tools when available.
+Be careful not to tightly couple the core automation logic to Cursor's specific 
+IDE environment. Utilize this as a transient adapter that fails gracefully.
 """
 
 import logging

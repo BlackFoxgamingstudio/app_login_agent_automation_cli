@@ -1,8 +1,16 @@
-import argparse
+"""
+Google Sites CLI
+
+DEVELOPER GUIDELINE: CLI Architecture
+Handles command-line arguments for Google Sites operations. Keep command 
+handlers thin by delegating business logic to specific modules (extractor, 
+automator, database).
+"""
+
 import os
-import shutil
-import json
-from src.grant_automation_cli.google_sites import extractor, automator, database
+
+from src.grant_automation_cli.google_sites import automator, database, extractor
+
 
 def register_parser(subparsers):
     """Register Google Sites commands."""
@@ -61,7 +69,7 @@ def _handle_init(args):
 def _handle_auth(args):
     try:
         automator.authenticate_google()
-    except Exception as e:
+    except RuntimeError as e:
         print(f"Authentication failed: {e}")
 
 def _handle_build(args):

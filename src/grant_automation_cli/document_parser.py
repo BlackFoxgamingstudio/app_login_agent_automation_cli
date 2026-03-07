@@ -1,6 +1,11 @@
 """
 Document Parser for Grant Applications
-Parses markdown files and extracts structured grant data.
+
+DEVELOPER GUIDELINE: Resilient Markdown Parsing
+Parses markdown files and extracts structured grant data. 
+Markdown structure is often informal. Do not rely strictly on exact line numbers 
+or rigid spacing. Use lenient Regular Expressions and fallback gracefully when 
+sections are missing.
 """
 
 import logging
@@ -28,6 +33,10 @@ class DocumentParser:
     def parse_markdown_file(self, file_path: str) -> Dict[str, Any]:
         """
         Parse a markdown file and extract structured data.
+
+        DEVELOPER GUIDELINE: Graceful Degradation
+        If a specific field cannot be parsed, log a warning but do not halt
+        the entire document parsing process unless it's a critical identifier.
 
         Args:
             file_path: Path to the markdown file
@@ -75,7 +84,7 @@ class DocumentParser:
                     frontmatter = yaml.safe_load(parts[1]) or {}
                 except ImportError:
                     logger.warning("PyYAML not available, skipping frontmatter parsing")
-                except Exception as e:
+                except (IOError, yaml.YAMLError) as e:
                     logger.warning(f"Error parsing frontmatter: {e}")
         return frontmatter
 

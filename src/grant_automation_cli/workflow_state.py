@@ -1,6 +1,10 @@
 """
 Workflow State Management
+
+DEVELOPER GUIDELINE: State Persistence & Idempotency
 Handles saving, loading, and resuming workflow state for checkpoint/resume functionality.
+Ensure state modifications are atomic where possible. Design all workflow operations 
+to be idempotent so partial failures do not corrupt the overall process.
 """
 
 import json
@@ -81,7 +85,7 @@ class WorkflowState:
                 json.dump(self.state, f, indent=2, default=str)
             logger.info(f"Checkpoint saved to {self.checkpoint_path}")
             return str(self.checkpoint_path)
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error saving checkpoint: {e}")
             raise
 
@@ -100,7 +104,7 @@ class WorkflowState:
                 self.state = json.load(f)
             logger.info(f"Checkpoint loaded from {self.checkpoint_path}")
             return True
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error loading checkpoint: {e}")
             return False
 
@@ -167,7 +171,7 @@ class WorkflowState:
             workflow_state = WorkflowState(workflow_id=workflow_id)
             workflow_state.state = state_data
             return workflow_state
-        except Exception as e:
+        except RuntimeError as e:
             logger.error(f"Error loading checkpoint from {checkpoint_path}: {e}")
             return None
 
@@ -211,7 +215,7 @@ class WorkflowState:
                         "checkpoint_path": str(checkpoint_path),
                     }
                 )
-            except Exception as e:
+            except RuntimeError as e:
                 logger.warning(f"Error reading workflow {workflow_dir}: {e}")
                 continue
 

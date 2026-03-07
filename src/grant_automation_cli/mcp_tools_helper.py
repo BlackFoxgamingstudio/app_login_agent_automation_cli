@@ -1,6 +1,10 @@
 """
 Helper module for accessing MCP browser tools.
+
+DEVELOPER GUIDELINE: Dependency Resolution Strategy
 This module provides a way to collect and organize MCP browser tools for use in automation.
+Because tools may be injected at runtime (e.g., by Cursor IDE), always use fallback mechanisms
+and never assume a tool is globally available until validated.
 """
 
 import builtins

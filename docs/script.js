@@ -1,10 +1,17 @@
+'use strict';
+/*
+ * DEVELOPER GUIDELINE: Strict Mode & Modularity
+ * Ensure all JS runs in strict mode to prevent accidental globals.
+ * Use functional programming paradigms and error boundaries for UI components.
+ */
+
 // Navigation Toggle
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const navToggle = document.querySelector('.nav-toggle');
     const navMenu = document.querySelector('.nav-menu');
-    
+
     if (navToggle) {
-        navToggle.addEventListener('click', function() {
+        navToggle.addEventListener('click', function () {
             navMenu.classList.toggle('active');
             navToggle.classList.toggle('active');
         });
@@ -27,8 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Active navigation highlighting
     const sections = document.querySelectorAll('.section, .hero');
     const navLinks = document.querySelectorAll('.nav-menu a');
-    
-    window.addEventListener('scroll', function() {
+
+    window.addEventListener('scroll', function () {
         let current = '';
         sections.forEach(section => {
             const sectionTop = section.offsetTop;
@@ -49,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Download button functionality
     const downloadBtn = document.querySelector('a[href="sdk-download.zip"]');
     if (downloadBtn) {
-        downloadBtn.addEventListener('click', function(e) {
+        downloadBtn.addEventListener('click', function (e) {
             // In a real implementation, this would trigger the actual download
             // For now, we'll just show a message
             console.log('Download initiated');

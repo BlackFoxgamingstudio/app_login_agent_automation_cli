@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending Videos Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .header-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .dashboard-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 20px 40px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .nav-left {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 0.95em;
+            min-width: 250px;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            border: none;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            color: #667eea;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .dashboard-main {
+            padding: 40px;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        .view-section h2 {
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .videos-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .video-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .video-card.platform-youtube {
+            border-left: 5px solid #ff0000;
+        }
+
+        .video-card.platform-tiktok {
+            border-left: 5px solid #00f2fe;
+        }
+
+        .video-card.platform-instagram {
+            border-left: 5px solid #e1306c;
+        }
+
+        .video-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .video-name {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #333;
+            flex: 1;
+            margin-right: 10px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .video-status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .video-status-badge.platform-youtube {
+            background: #ffeeee;
+            color: #cc0000;
+        }
+
+        .video-status-badge.platform-tiktok {
+            background: #e6ffff;
+            color: #00aaaa;
+        }
+
+        .video-status-badge.platform-instagram {
+            background: #ffe6f0;
+            color: #cc0052;
+        }
+
+        .video-card-body {
+            margin-bottom: 15px;
+        }
+
+        .video-card-body>div {
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .video-card-body strong {
+            color: #667eea;
+            margin-right: 5px;
+        }
+
+        .video-card-footer {
+            border-top: 1px solid #e9ecef;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .btn-details {
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+            padding: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-details:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .loading-state,
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #95a5a6;
+            font-style: italic;
+            width: 100%;
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Trending Videos Explorer</h1>
+            <p class="subtitle">Tracking Hot Content > 1M Views in 24 Hours</p>
+            <div class="header-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-youtube">...</div>
+                    <div class="stat-label">YouTube Trends</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-tiktok">...</div>
+                    <div class="stat-label">TikTok Trends</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-instagram">...</div>
+                    <div class="stat-label">Instagram Trends</div>
+                </div>
+            </div>
+        </header>
+
+        <nav class="dashboard-nav">
+            <div class="nav-left">
+                <button class="nav-btn active" data-view="youtube" aria-label="Button">YouTube</button>
+                <button class="nav-btn" data-view="tiktok" aria-label="Button">TikTok</button>
+                <button class="nav-btn" data-view="instagram" aria-label="Button">Instagram</button>
+            </div>
+            <div class="nav-right">
+                <input type="text" id="search-input" class="search-input" placeholder="Search videos...">
+            </div>
+        </nav>
+
+        <main class="dashboard-main">
+            <section id="youtube-view" class="view-section active">
+                <h2>YouTube Trending</h2>
+                <div class="videos-list" id="youtube-list">
+                    <div class="loading-state">Loading YouTube data...</div>
+                </div>
+            </section>
+
+            <section id="tiktok-view" class="view-section">
+                <h2>TikTok Trending</h2>
+                <div class="videos-list" id="tiktok-list">
+                    <div class="loading-state">Loading TikTok data...</div>
+                </div>
+            </section>
+
+            <section id="instagram-view" class="view-section">
+                <h2>Instagram Trending</h2>
+                <div class="videos-list" id="instagram-list">
+                    <div class="loading-state">Loading Instagram data...</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const platforms = ['youtube', 'tiktok', 'instagram'];
+        const dataStore = {
+            youtube: [],
+            tiktok: [],
+            instagram: []
+        };
+
+        // Navigation logic
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+
+                e.target.classList.add('active');
+                const viewId = e.target.getAttribute('data-view');
+                document.getElementById(`${viewId}-view`).classList.add('active');
+            });
+        });
+
+        // Search logic
+        document.getElementById('search-input').addEventListener('keyup', (e) => {
+            const query = e.target.value.toLowerCase();
+            platforms.forEach(platform => {
+                const filtered = dataStore[platform].filter(item =>
+                    (item.Title && item.Title.toLowerCase().includes(query)) ||
+                    (item.Category && item.Category.toLowerCase().includes(query))
+                );
+                renderList(platform, filtered);
+            });
+        });
+
+        // CSV Parser
+        function parseCSVLine(text) {
+            const result = [];
+            let inQuotes = false;
+            let currentStr = "";
+            for (let i = 0; i < text.length; i++) {
+                if (text[i] === '"') {
+                    inQuotes = !inQuotes;
+                } else if (text[i] === ',' && !inQuotes) {
+                    result.push(currentStr);
+                    currentStr = "";
+                } else {
+                    currentStr += text[i];
+                }
+            }
+            result.push(currentStr);
+            return result;
+        }
+
+        // Fetch data
+        async function fetchCSVData(platform) {
+            try {
+                const response = await fetch(`data/${platform}_trending.csv`);
+                if (!response.ok) throw new Error('Failed to fetch');
+                const text = await response.text();
+
+                const lines = text.trim().split('\\n');
+                if (lines.length < 2) return [];
+
+                const headers = parseCSVLine(lines[0]);
+                const data = [];
+
+                for (let i = 1; i < lines.length; i++) {
+                    const values = parseCSVLine(lines[i]);
+                    if (values.length === headers.length) {
+                        const obj = {};
+                        headers.forEach((header, index) => {
+                            obj[header.trim()] = values[index].trim();
+                        });
+                        data.push(obj);
+                    }
+                }
+                return data;
+            } catch (error) {
+                console.error(`Error loading ${platform} data:`, error);
+                return null;
+            }
+        }
+
+        // Render cards
+        function renderList(platform, items) {
+            const container = document.getElementById(`${platform}-list`);
+            const statContainer = document.getElementById(`stat-${platform}`);
+
+            if (!items) {
+                container.innerHTML = '<div class="empty-state">Unable to load data. The scraper may need to run first.</div>';
+                statContainer.textContent = "0";
+                return;
+            }
+
+            statContainer.textContent = items.length;
+
+            if (items.length === 0) {
+                container.innerHTML = '<div class="empty-state">No matching videos found.</div>';
+                return;
+            }
+
+            container.innerHTML = items.map(item => `
+                <div class="video-card platform-${platform}">
+                    <div class="video-card-header">
+                        <h4 class="video-name">${item.Title || 'Unknown Title'}</h4>
+                        <span class="video-status-badge platform-${platform}">${item.Platform || platform}</span>
+                    </div>
+                    <div class="video-card-body">
+                        <div><strong>Views:</strong> ${item.Views || 'N/A'}</div>
+                        <div><strong>Category:</strong> ${item.Category || 'Trending'}</div>
+                        <div><strong>Type:</strong> ${item.VideoType || 'Video'}</div>
+                        <div><strong>Published:</strong> ${item.PublishedDate || 'Unknown'}</div>
+                    </div>
+                    <div class="video-card-footer">
+                        <a href="${item.URL || '#'}" target="_blank" class="btn-details" aria-label="Link to ${item.URL || '#'}">Watch Video</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize
+        async function init() {
+            for (const platform of platforms) {
+                const data = await fetchCSVData(platform);
+                if (data) {
+                    dataStore[platform] = data;
+                }
+                renderList(platform, dataStore[platform]);
+            }
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

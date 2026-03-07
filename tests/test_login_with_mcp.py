@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """
 Test login using available MCP browser tools.
+
+DEVELOPER GUIDELINE: Tool Injection Testing
+When testing dynamic runtime dependencies like MCP tool injection, ensure 
+test setups correctly mock or pass through the required context (like globals) 
+to simulate the real execution environment accurately.
+
 This script demonstrates how the SDK CLI login works when MCP tools are available.
 """
 

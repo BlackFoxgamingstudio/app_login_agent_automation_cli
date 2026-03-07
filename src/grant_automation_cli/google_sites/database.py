@@ -1,6 +1,13 @@
+"""
+Google Sites Database
+
+DEVELOPER GUIDELINE: DB Initialization & Migrations
+Manages the SQLite database for Google Sites templates. When modifying 
+schemas, ensure backward compatibility or provide a migration strategy. 
+Use parameterized queries to prevent SQL injection.
+"""
+
 import sqlite3
-import os
-import json
 
 DB_FILE = "google_sites.db"
 
